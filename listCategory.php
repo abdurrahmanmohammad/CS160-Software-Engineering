@@ -26,7 +26,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img src="images/Furniture-1.jpg" height="300"/>
+            <img src="images/Furniture-1.jpg" class="w-100"/>
             <div class="card-body">
               <p class="card-text">Furniture</p>
               <div class="d-flex justify-content-between align-items-center">
@@ -41,7 +41,7 @@
         
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img src="images/cleaning-1.jpg" height="300"/>
+            <img src="images/cleaning-1.jpg" class="w-100"/>
             <div class="card-body">
               <p class="card-text">Cleaning</p>
               <div class="d-flex justify-content-between align-items-center">
@@ -56,7 +56,7 @@
         
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage1.jpg" height="300"/>
+            <img src="images/ItemImage1.jpg" class="w-100"/>
             <div class="card-body">
               <p class="card-text">Breakroom</p>
               <div class="d-flex justify-content-between align-items-center">
@@ -71,7 +71,7 @@
         
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage2.jpg" height="300"/>
+            <img src="images/ItemImage2.jpg" class="w-100"/>
             <div class="card-body">
               <p class="card-text">Computers and Accessories</p>
               <div class="d-flex justify-content-between align-items-center">
@@ -86,7 +86,7 @@
         
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage1.jpg" height="300"/>
+            <img src="images/ItemImage1.jpg" class="w-100"/>
             <div class="card-body">
               <p class="card-text">Electronics</p>
               <div class="d-flex justify-content-between align-items-center">
@@ -101,7 +101,7 @@
         
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage2.jpg" height="300"/>
+            <img src="images/ItemImage2.jpg" class="w-100"/>
             <div class="card-body">
               <p class="card-text">Paper</p>
               <div class="d-flex justify-content-between align-items-center">
