@@ -29,12 +29,12 @@
         <div class="form-group">
             <label for="uploadCategoryImage1">Upload Category Image 1</label>
             <input type="file" class="form-control-file" id="categoryImageUpload1" required>
-            <img src="images/Furniture-1.jpg" class="rounded" />
+            <img src="images/Furniture-1.jpg" height="300" />
         </div>
         <div class="form-group">
             <label for="uploadCategoryImage2">Upload Category Image 2</label>
             <input type="file" class="form-control-file" id="categoryImageUpload2">
-            <img src="images/Furniture-2.jpg" class="rounded" />
+            <img src="images/ItemImage2.jpg" height="300" />
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
