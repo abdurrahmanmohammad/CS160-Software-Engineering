@@ -21,7 +21,7 @@
 <body>
     <div id="nav-placeholder"></div>
     <script>
-    $.get("./nav.html", function(data) {
+    $.get("./nav_admin.html", function(data) {
         $("#nav-placeholder").replaceWith(data);
     });
     </script>
