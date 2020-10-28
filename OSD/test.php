@@ -1,36 +1,16 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load item database methods
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory database methods
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
-
-/** Set up connection to DB */
+require_once 'Login.php'; // Import database credentials
+require_once 'ItemMethods.php'; // Load item database methods
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
-if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+if($conn->connect_error) // Check connection. If cannot connect to DB, terminate program.
+	die(mysql_fatal_error("Could not access DB when building Item table: ".$conn->error));
 
-ItemInitialize($conn);
-ItemInsert($conn, "A101", "Pens", 4.99, 0.23, "This is a very nice Pens");
-echo "Item exists (should return true): ".ItemExists($conn, "A101").'<br>';
-echo "Item exists (should return false): ".ItemExists($conn, "B101").'<br>';
-$item = ItemSearch($conn, "A101", "Pens", 4.99, 0.23, "This is a very nice Pens");
-echo $item[0][0].$item[0][1].$item[0][2].$item[0][3].$item[0][4].'<br>';
+$itemID = "12w4";
+$title = "ABC";
+$price = 32.12;
+$weight = 23.21;
+$description = "223";
+$picture = "2aaas";
+ItemInsert($conn, $itemID, $title, $price, $weight, $description, $picture);
 
-
-echo "Test: ItemUpdate<br>";
-ItemUpdate($conn, "A101", "Pens", 4.99, 0.23, "This is a very nice Pens",
-	"B101", "Pensssssssss", 4444.99, 100.23, "!!!!This is a very nice Pens");
-
-echo "Test: ItemSearch<br>";
-$item = ItemSearch($conn, "B101", "Pens", 4.99, 0.23, "This is a very nice Pens");
-echo $item[0][0].$item[0][1].$item[0][2].$item[0][3].$item[0][4].'<br>';
-
-
-echo "Test: ItemSearchByItemID<br>";
-$item = ItemSearchByItemID($conn, "A101");
-echo $item[0][0].$item[0][1].$item[0][2].$item[0][3].$item[0][4].'<br>';
-$item = ItemSearchByItemID($conn, "B101");
-echo $item[0][0].$item[0][1].$item[0][2].$item[0][3].$item[0][4].'<br>';
-
-echo "Test: ItemDelete<br>";
-//ItemDelete($conn, "A101", "Pens", 4.99, 0.23, "This is a very nice Pens");
-//ItemDelete($conn, "B101", "Pensssssssss", 4444.99, 100.23, "!!!!This is a very nice Pens");
+$conn->close(); // Close the connection before exiting
