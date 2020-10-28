@@ -50,7 +50,7 @@
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a user.</p>
-                <a href="#" class="btn">
+                <a href="listUser.php" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>

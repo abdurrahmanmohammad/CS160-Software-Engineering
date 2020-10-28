@@ -1,6 +1,6 @@
 <!-- Admin - update a category  -->
 <?php
-require 'model/category.php';
+require 'model/Category.php';
 $categoryId = $_GET["categoryId"];
 if (isset($_POST['categoryName']) ){
     $categoryName = $_POST["categoryName"];
