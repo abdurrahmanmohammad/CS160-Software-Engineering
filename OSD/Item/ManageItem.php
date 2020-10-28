@@ -6,6 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load it
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory database methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/CategoryMethods.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php';
 
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
@@ -40,10 +41,23 @@ if(isset($_POST['UpdateInventoryB']) && isset($itemID)) { // Check if submit but
 	echo "Inventory updated!"; // Replace with a JS message
 }
 
+/** Delete category */
+if(isset($_POST['DeleteCategory']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	CategoryDelete($conn, $itemID, get_post($conn, 'category'));
+	echo "Category deleted!!"; // Replace with a JS message
+}
+
+/** Delete picture */
+if(isset($_POST['DeletePicture']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	PictureDelete($conn, $itemID, get_post($conn, 'picture'));
+	echo "Picture deleted!!"; // Replace with a JS message
+}
 
 /** Print item */
 PrintViewItem($conn, $itemID); // Print item information with updatable fields
 PrintViewInventory($conn, $itemID);
+PrintCategories($conn, $itemID);
+PrintPictures($conn, $itemID);
 
 
 /** Close DB connection before exiting */
@@ -114,20 +128,34 @@ function PrintViewInventory($conn, $itemID) {
 function PrintCategories($conn, $itemID) {
 	$categories = CategorySearch($conn, $itemID);
 	if(is_null($categories)) return; // If no item passed in, don't print anything
-
 	echo <<<_END
-	<form action="ManageItem.php" method="post">
-_END;
-
+		<h1>Categories</h1>
+	_END;
 	foreach($categories as $category)
 		echo <<<_END
-		$category
-		<input type="hidden" id="$category" name="$category" value="$category">
-		<input type="submit" id="UpdateItem" name="UpdateItem" value="Update">
-		<input type="submit" id="DeleteItem" name="DeleteItem" value="Delete">
+		<form action="ManageItem.php" method="post">
+		$category[1]
+		<input type="hidden" id="category" name="category" value="$category[1]">
+		<input type="hidden" id="itemID" name="itemID" value="$category[0]">
+		<input type="submit" id="DeleteCategory" name="DeleteCategory" value="Delete">
+		</form>
 		_END;
+}
 
+function PrintPictures($conn, $itemID) {
+	$pictures = PictureSearch($conn, $itemID);
+	if(is_null($pictures)) return; // If no item passed in, don't print anything
 	echo <<<_END
-	</form>
-_END;
+		<h1>Pictures</h1>
+	_END;
+
+	foreach($pictures as $picture)
+		echo <<<_END
+		<form action="ManageItem.php" method="post">
+		$picture[1]
+		<input type="hidden" id="picture" name="picture" value="$picture[1]">
+		<input type="hidden" id="itemID" name="itemID" value="$picture[0]">
+		<input type="submit" id="DeletePicture" name="DeletePicture" value="Delete">
+		</form>
+		_END;
 }
