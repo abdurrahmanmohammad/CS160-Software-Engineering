@@ -1,16 +1,14 @@
-<!-- Admin - create a new category  -->
+<!-- Admin - delete a category  -->
 <?php
 require 'model/category.php';
-if (isset($_POST['categoryName']) ){
-    $categoryName = $_POST["categoryName"];
-    insertCategory($categoryName);
-}
+$categoryId = $_GET["categoryId"];
+$category = deleteCategory($categoryId);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Create Category</title>
+<title>Delete Category</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -25,20 +23,13 @@ if (isset($_POST['categoryName']) ){
     });
     </script>
     <div class="container">
-        <h1>Create Category</h1>
+        <h1>Delete Category</h1>
     <hr>
-    <?php if (isset($_POST['categoryName'])): ?>
     <div class="alert alert-primary" role="alert">
-        Category saved
+        Category deleted
     </div>
-    <?php endif; ?>
-    <form method="POST">
+    <form>
         <div class="form-group">
-            <label for="categoryName">Category Name</label>
-            <input type="text" class="form-control" name="categoryName" placeholder="Enter category name" required>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Create</button>
             <a href="listCategory.php" class="btn">
                 <button type="button" class="btn btn-primary">Back to category list</button>
             </a>

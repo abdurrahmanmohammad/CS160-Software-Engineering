@@ -28,7 +28,7 @@
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a product item.</p>
-                <a href="#">
+                <a href="#" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>
@@ -39,7 +39,7 @@
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a product category.</p>
-                <a href="listCategory.php">
+                <a href="listCategory.php" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>
@@ -50,7 +50,7 @@
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a user.</p>
-                <a href="#">
+                <a href="#" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>

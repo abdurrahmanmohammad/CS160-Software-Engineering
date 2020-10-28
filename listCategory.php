@@ -1,4 +1,8 @@
 <!-- Admin - list all categories  -->
+<?php
+require_once 'model/category.php';
+$categories = listAllCategory();
+?>
 
 <!DOCTYPE html>
 <html>
@@ -20,105 +24,38 @@
     <div class="container">
         <h1>List Category</h1>
         <hr>
-  <div class="album py-5 bg-light">
-    <div class="container">
-
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img src="images/Furniture-1.jpg" class="w-100"/>
-            <div class="card-body">
-              <p class="card-text">Furniture</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img src="images/cleaning-1.jpg" class="w-100"/>
-            <div class="card-body">
-              <p class="card-text">Cleaning</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage1.jpg" class="w-100"/>
-            <div class="card-body">
-              <p class="card-text">Breakroom</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage2.jpg" class="w-100"/>
-            <div class="card-body">
-              <p class="card-text">Computers and Accessories</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage1.jpg" class="w-100"/>
-            <div class="card-body">
-              <p class="card-text">Electronics</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4">
-          <div class="card mb-4 shadow-sm">
-            <img src="images/ItemImage2.jpg" class="w-100"/>
-            <div class="card-body">
-              <p class="card-text">Paper</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </div>
+        <a href="createCategory.php" class="btn">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Create Category</button>
+        </a>
+         <a href="homePageAdmin.php" class="btn">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Back to homepage</button>
+        </a>
+        <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Category Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+            <?php foreach ($categories as $category): ?>
+            <tr>
+                <td><?php echo $category["name"]; ?></td>
+                <td>
+                    <a href="updateCategory.php?categoryId=<?php echo $category["id"]; ?>" class="btn">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    </a>
+                    <a href="deleteCategory.php?categoryId=<?php echo $category["id"]; ?>" class="btn confirmation">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
     </div>
-  </div>
-    
-    </div>
-    
+    <script type="text/javascript">
+        $('.confirmation').on('click', function () {
+            return confirm('Are you sure to delete the category?');
+        });
+    </script>
 </body>
 </html>

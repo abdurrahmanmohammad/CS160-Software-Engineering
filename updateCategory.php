@@ -1,4 +1,13 @@
 <!-- Admin - update a category  -->
+<?php
+require 'model/category.php';
+$categoryId = $_GET["categoryId"];
+if (isset($_POST['categoryName']) ){
+    $categoryName = $_POST["categoryName"];
+    updateCategory($categoryId, $categoryName);
+}
+$category = getCategory($categoryId);
+?>
 
 <!DOCTYPE html>
 <html>
@@ -20,23 +29,23 @@
     <div class="container">
         <h1>Update Category</h1>
     <hr>
-    <form>
-        <input type="hidden" id="categoryId" name="categoryId" value="1234">
+    <?php if (isset($_POST['categoryName'])): ?>
+    <div class="alert alert-primary" role="alert">
+        Category saved
+    </div>
+    <?php endif; ?>
+    <form action="updateCategory.php?categoryId=<?php echo $category["id"]; ?>" method="POST">
         <div class="form-group">
-            <label for="productName">Category Name</label>
-            <input type="text" class="form-control" id="categoryNameInput" placeholder="Enter category name" required value ="Furniture">
+            <label for="categoryName">Category Name</label>
+            <input name="categoryName" type="text" class="form-control" id="categoryName" placeholder="Enter category name" required value ="<?php echo $category["name"]; ?>">
         </div>
         <div class="form-group">
-            <label for="uploadCategoryImage1">Upload Category Image 1</label>
-            <input type="file" class="form-control-file" id="categoryImageUpload1" required>
-            <img src="images/Furniture-1.jpg" height="300" />
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="listCategory.php" class="btn">
+                <button type="button" class="btn btn-primary">Back to category list</button>
+            </a>
         </div>
-        <div class="form-group">
-            <label for="uploadCategoryImage2">Upload Category Image 2</label>
-            <input type="file" class="form-control-file" id="categoryImageUpload2">
-            <img src="images/ItemImage2.jpg" height="300" />
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        
     </form>
     </div>
     
