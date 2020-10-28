@@ -25,14 +25,15 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Test" />
       <recent name="$PROJECT_DIR$/Item" />
       <recent name="$PROJECT_DIR$/Data Layer" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/CreateItem" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager">
@@ -66,6 +67,8 @@
       <workItem from="1603376522419" duration="33232000" />
       <workItem from="1603559124285" duration="1237000" />
       <workItem from="1603597619840" duration="3068000" />
+      <workItem from="1603760603535" duration="6236000" />
+      <workItem from="1603858993607" duration="334000" />
     </task>
     <servers />
   </component>
@@ -87,35 +90,39 @@
     </state>
     <state x="320" y="115" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1603067379843" />
     <state x="342" y="207" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1603121140673" />
-    <state width="1398" height="230" key="GridCell.Tab.0.bottom" timestamp="1603577934235">
+    <state x="456" y="270" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1603761766353">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="456" y="270" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.877@0.23.1440.877" timestamp="1603761766353" />
+    <state width="1398" height="230" key="GridCell.Tab.0.bottom" timestamp="1603773990283">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1603428939117" />
-    <state width="1398" height="230" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1603577934235" />
-    <state width="1398" height="230" key="GridCell.Tab.0.center" timestamp="1603577934234">
+    <state width="1398" height="230" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1603773990283" />
+    <state width="1398" height="230" key="GridCell.Tab.0.center" timestamp="1603773990282">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1603428939116" />
-    <state width="1398" height="230" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1603577934234" />
-    <state width="1398" height="230" key="GridCell.Tab.0.left" timestamp="1603577934234">
+    <state width="1398" height="230" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1603773990282" />
+    <state width="1398" height="230" key="GridCell.Tab.0.left" timestamp="1603773990282">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1603428939115" />
-    <state width="1398" height="230" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1603577934234" />
-    <state width="1398" height="230" key="GridCell.Tab.0.right" timestamp="1603577934235">
+    <state width="1398" height="230" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1603773990282" />
+    <state width="1398" height="230" key="GridCell.Tab.0.right" timestamp="1603773990282">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1603428939117" />
-    <state width="1398" height="230" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1603577934235" />
+    <state width="1398" height="230" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1603773990282" />
     <state x="471" y="183" key="NewPhpClassDialog" timestamp="1603140565032">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="471" y="183" key="NewPhpClassDialog/0.0.1440.900@0.0.1440.900" timestamp="1603140565032" />
-    <state x="543" y="380" key="NewPhpFileDialog" timestamp="1603408607684">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="543" y="393" key="NewPhpFileDialog" timestamp="1603766376992">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="543" y="380" key="NewPhpFileDialog/0.0.1440.900@0.0.1440.900" timestamp="1603408607684" />
-    <state x="543" y="393" key="NewPhpFileDialog/0.23.1440.877@0.23.1440.877" timestamp="1603121306303" />
+    <state x="543" y="393" key="NewPhpFileDialog/0.23.1440.877@0.23.1440.877" timestamp="1603766376992" />
     <state x="324" y="78" width="1440" height="877" key="SettingsEditor" timestamp="1603333078804">
       <screen x="0" y="23" width="1440" height="877" />
     </state>

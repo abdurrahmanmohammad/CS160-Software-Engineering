@@ -3,6 +3,8 @@
 require_once 'Login.php'; // Import DB credentials
 require_once 'ItemMethods.php';
 require_once 'InventoryMethods.php';
+require_once 'PictureMethods.php';
+require_once 'CategoryMethods.php';
 // require_once 'DatabaseSecurityMethods.php'; // Can access from same package
 // require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Directory of file
 // require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Directory of file
@@ -54,12 +56,15 @@ function buildTables($conn) {
 
 	/** Inventory(itemID, warehouse_number, number_in_stock) */
 	InventoryInitialize($conn);
-	echo "--> Table 'Item' Inventory successfully!<br>";
+	echo "--> Table 'Inventory' built successfully!<br>";
 
 	/** Picture(itemID, picture) */
-	//PicturesInitialize();
+	PictureInitialize($conn);
+	echo "--> Table 'Picture' built successfully!<br>";
+
 	/** Category(itemID, category) */
-	//CategoryInitialize();
+	CategoryInitialize($conn);
+	echo "--> Table 'Category' built successfully!<br>";
 
 	/** User(userID, first name, last name, email, phone, address) */
 

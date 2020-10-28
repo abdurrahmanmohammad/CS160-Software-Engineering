@@ -118,7 +118,7 @@ function ItemInsert($conn, $itemID, $title, $price, $weight, $description) {
 	if(!$conn) return false; // DB connection must be passed in
 	if(is_null($itemID) || is_null($title) || is_null($price) || is_null($weight)) return false; // If blank fields
 	if(ItemExists($conn, $itemID) != 0) return false; // If item already exists
-	if($stmt = $conn->prepare("INSERT INTO Item VALUES (?, ?, ?, ?, ?)")) { // Sanitize vars with prepared statement
+	if($stmt = $conn->prepare("INSERT INTO Item VALUES (?, ?, ?, ?, ?);")) { // Sanitize vars with prepared statement
 		$stmt->bind_param('ssdds', $itemID, $title, $price, $weight, $description); // Bind params for sanitization
 		$output = $stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
 		$stmt->close(); // Close statement

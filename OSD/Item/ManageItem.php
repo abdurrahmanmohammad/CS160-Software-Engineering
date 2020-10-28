@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import databa
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load item database methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory database methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/CategoryMethods.php';
 
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
@@ -108,4 +109,25 @@ function PrintViewInventory($conn, $itemID) {
 		<br>
 	</form>
 	_END;
+}
+
+function PrintCategories($conn, $itemID) {
+	$categories = CategorySearch($conn, $itemID);
+	if(is_null($categories)) return; // If no item passed in, don't print anything
+
+	echo <<<_END
+	<form action="ManageItem.php" method="post">
+_END;
+
+	foreach($categories as $category)
+		echo <<<_END
+		$category
+		<input type="hidden" id="$category" name="$category" value="$category">
+		<input type="submit" id="UpdateItem" name="UpdateItem" value="Update">
+		<input type="submit" id="DeleteItem" name="DeleteItem" value="Delete">
+		_END;
+
+	echo <<<_END
+	</form>
+_END;
 }
