@@ -8,6 +8,8 @@ require_once 'CategoryMethods.php';
 // require_once 'DatabaseSecurityMethods.php'; // Can access from same package
 // require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Directory of file
 // require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Directory of file
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
+
 
 /** ####################################################### */
 /** ############ Creates database and tables ############## */
@@ -66,9 +68,11 @@ function buildTables($conn) {
 	CategoryInitialize($conn);
 	echo "--> Table 'Category' built successfully!<br>";
 
-	/** User(userID, first name, last name, email, phone, address) */
-
-	/** Account(userID, username, password, accountType) */
-
+	/** Account(email, password, accountType, first name, last name, phone, address) */
+	AccountInitialize($conn);
+	echo "--> Table 'Account' built successfully!<br>";
+	$password = password_hash("CS160", PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
+	AccountInsert($conn, "admin", $password, "admin", "admin", "admin", "admin", "admin");
+	echo "--> Admin inserted!<br>";
 
 }

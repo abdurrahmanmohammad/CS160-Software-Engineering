@@ -16,7 +16,7 @@ TestManageItem();
 
 function TestViewItem() {
 	echo <<<_END
-	<form action="ViewItem.php" method="post">
+	<form action="../Item/ViewItem.php" method="post">
 		<label for="itemID">Item ID</label><br>
  		<input type="text" id="itemID" name="itemID" value="1234"><br>
  		<input type="submit" id="TestViewItem" name="TestViewItem" value="Submit">
@@ -26,7 +26,7 @@ _END;
 
 function TestManageItem() {
 	echo <<<_END
-	<form action="ManageItem.php" method="post">
+	<form action="../Item/ManageItem.php" method="post">
 		<label for="itemID">Item ID</label><br>
  		<input type="text" id="itemID" name="itemID" value="1234"><br>
  		<input type="submit" id="TestManageItem" name="TestManageItem" value="Submit">

@@ -47,6 +47,12 @@ if(isset($_POST['DeleteCategory']) && isset($itemID)) { // Check if submit butto
 	echo "Category deleted!!"; // Replace with a JS message
 }
 
+/** Add category */
+if(isset($_POST['AddCategory']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	CategoryInsert($conn, $itemID, get_post($conn, 'category'));
+	echo "Category inserted!!"; // Replace with a JS message
+}
+
 /** Delete picture */
 if(isset($_POST['DeletePicture']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
 	PictureDelete($conn, $itemID, get_post($conn, 'picture'));
@@ -56,6 +62,7 @@ if(isset($_POST['DeletePicture']) && isset($itemID)) { // Check if submit button
 /** Print item */
 PrintViewItem($conn, $itemID); // Print item information with updatable fields
 PrintViewInventory($conn, $itemID);
+AddCategory($itemID);
 PrintCategories($conn, $itemID);
 PrintPictures($conn, $itemID);
 
@@ -142,11 +149,22 @@ function PrintCategories($conn, $itemID) {
 		_END;
 }
 
+function AddCategory($itemID) {
+	echo <<<_END
+	<h1>Add Category</h1>
+	<form action="ManageItem.php" method="post">
+		Category <input type="text" id="category" name="category">
+		<input type="hidden" id="itemID" name="itemID" value="$itemID">
+		<input type="submit" id="AddCategory" name="AddCategory" value="Add">
+	</form>
+	_END;
+}
+
 function PrintPictures($conn, $itemID) {
 	$pictures = PictureSearch($conn, $itemID);
 	if(is_null($pictures)) return; // If no item passed in, don't print anything
 	echo <<<_END
-		<h1>Pictures</h1>
+		<h1>Pictures</h1> 
 	_END;
 
 	foreach($pictures as $picture)
@@ -154,8 +172,12 @@ function PrintPictures($conn, $itemID) {
 		<form action="ManageItem.php" method="post">
 		$picture[1]
 		<input type="hidden" id="picture" name="picture" value="$picture[1]">
-		<input type="hidden" id="itemID" name="itemID" value="$picture[0]">
+		<input type="hidden" id="itemID" name="itemID" value="$itemID">
 		<input type="submit" id="DeletePicture" name="DeletePicture" value="Delete">
 		</form>
 		_END;
+}
+
+function AddPicture() {
+	
 }
