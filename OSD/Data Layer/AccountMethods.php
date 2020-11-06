@@ -1,31 +1,5 @@
 <?php
 
-// Account(email, password, accountType, first name, last name, phone, address)
-// Note: Don't forget to have a create admin account page in the account management page
-
-function checkPassword($conn, $un_temp, $pw_temp) {
-	$query = "SELECT * FROM Account WHERE username='$un_temp'";
-	$result = $conn->query($query);
-	if(!$result) die($conn->error);
-	elseif($result->num_rows) { // If user exists
-		$row = $result->fetch_array(MYSQLI_NUM);
-		$result->close();
-		if(password_verify($pw_temp, $row[1])) { // Check password
-			session_start();
-			ini_set('session.gc_maxlifetime', 60 * 60 * 24); // ##### Setting a Time-Out for cookie #####
-			$_SESSION['username'] = $un_temp;
-			$_SESSION['password'] = $pw_temp;
-			$_SESSION['email'] = $row[2];
-			/* Additional Checks: Preventing session hijacking */
-			$_SESSION['check'] = hash('ripemd128', $_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
-			echo "Hi $row[0], you are now logged in!";
-			die("<p><a href=user.php>Click here to continue</a></p>");
-		} else
-			die("Invalid username/password combination"); // Incorrect password
-	} else
-		die("Invalid username/password combination"); // Incorrect username
-}
-
 
 /**
  * Builds the table of users

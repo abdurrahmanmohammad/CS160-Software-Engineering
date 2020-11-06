@@ -49,9 +49,9 @@ function PictureInsert($conn, $itemID, $directory) {
 	if(PictureExists($conn, $itemID, $directory) != 0) return false; // If item already exists
 	if($stmt = $conn->prepare("INSERT INTO Picture VALUES (?, ?);")) { // Sanitize vars with prepared statement
 		$stmt->bind_param('ss', $itemID, $directory); // Bind params for sanitization
-		$output = $stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
+		$stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
 		$stmt->close(); // Close statement
-		return $output; // Return if successful insert
+		return true; // Return if successful insert
 	}
 	return false; // If prepared statement failed, return false
 }

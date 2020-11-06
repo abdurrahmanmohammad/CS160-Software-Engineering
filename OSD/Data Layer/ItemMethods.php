@@ -124,7 +124,7 @@ function ItemInsert($conn, $itemID, $title, $price, $weight, $description) {
 		$stmt->close(); // Close statement
 		InventoryInsert($conn, $itemID, 'A', 0, null); // Create inventory object for warehouse A
 		InventoryInsert($conn, $itemID, 'B', 0, null); // Create inventory object for warehouse B
-		return $output; // Return if successful insert
+		return true; // Return if successful insert
 	}
 	return false; // If prepared statement failed, return false
 }
