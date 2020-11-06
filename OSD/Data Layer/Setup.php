@@ -72,6 +72,6 @@ function buildTables($conn) {
 	AccountInitialize($conn);
 	echo "--> Table 'Account' built successfully!<br>";
 	$password = password_hash("CS160", PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
-	AccountInsert($conn, "admin", $password, "admin", "admin", "admin", "admin", "admin");
+	AccountInsert($conn, "admin@admin.com", $password, "admin", "admin", "admin", "admin", "admin");
 	echo "--> Admin inserted!<br>";
 }
