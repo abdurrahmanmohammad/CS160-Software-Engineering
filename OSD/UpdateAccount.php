@@ -38,7 +38,10 @@ _END;
 if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['accountType'])
 	&& isset($_POST['firstname']) && isset($_POST['lastname'])
 	&& isset($_POST['phone']) && isset($_POST['address'])) {
-	AccountUpdate($conn, $OLD_email, get_post($conn, 'email'), get_post($conn, 'password'),
+	// Check if password was updated. If so, salt and hash the new password before storing.
+	$password = $account['password'] == get_post($conn, 'password') ?
+		$account['password'] : password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
+	AccountUpdate($conn, $OLD_email, get_post($conn, 'email'), $password,
 		get_post($conn, 'accountType'), get_post($conn, 'firstname'), get_post($conn, 'lastname'),
 		get_post($conn, 'phone'), get_post($conn, 'address'));
 	echo <<<_END
