@@ -68,7 +68,7 @@ _END;*/
 echo <<<_END
 <html>
 	<head>
-		<title>Create User</title>
+		<title>Create Account</title>
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<script src="js/jquery-3.2.1.slim.min.js"></script>
 		<script src="js/popper.min.js"></script>
@@ -83,7 +83,7 @@ echo <<<_END
 	    });
 	    </script>
 	    <div class="container">
-	        <h1>Create User</h1>
+	        <h1>Create Account</h1>
 	    <hr>
 _END;
 // Print messages
