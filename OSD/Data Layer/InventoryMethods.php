@@ -35,10 +35,10 @@ function InventoryInsert($conn, $itemID, $warehouse, $quantity, $last_update) {
 	if(InventoryExists($conn, $itemID, $warehouse) != 0) return false; // If item already exists, don't insert
 	if($stmt = $conn->prepare("INSERT INTO Inventory VALUES (?, ?, ?, ?)")) { // Sanitize vars with prepared statement
 		$stmt->bind_param('ssds', $itemID, $warehouse, $quantity, $last_update); // Bind params for sanitization
-		if(!$output = $stmt->execute()) // Execute statement: Success = TRUE, Failure = FALSE
+		if(!$stmt->execute()) // Execute statement: Success = TRUE, Failure = FALSE
 			die(mysql_fatal_error("Could not insert: ".$conn->error)); // Error with prepare statement
 		$stmt->close(); // Close statement
-		return $output; // Return if successful insert
+		return true; // Return if successful insert
 	}
 	return false; // If prepared statement failed, return false
 }

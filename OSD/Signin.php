@@ -26,6 +26,12 @@ echo <<< _END
 <script src="js/jquery-1.10.2.js"></script>
 </head>
 <body class="text-center">
+	<div id="nav-placeholder"></div>
+	<script>
+    	$.get("./nav.html", function (data) {
+        	$("#nav-placeholder").replaceWith(data);
+    	});
+	</script>
 	<form class="form-signin" action="Signin.php" method="post">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputEmail" class="sr-only">Email address</label>

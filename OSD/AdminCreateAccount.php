@@ -32,10 +32,10 @@ $accountCreated = false;
 
 if(isset($_POST['email']) && isset($_POST['password'])
 	&& isset($_POST['firstname']) && isset($_POST['lastname'])
-	&& isset($_POST['phone']) && isset($_POST['address'])) {
+	&& isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['accountType'])) {
 	$password = password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
 
-	if(AccountInsert($conn, get_post($conn, 'email'), $password, "customer",
+	if(AccountInsert($conn, get_post($conn, 'email'), $password, get_post($conn, 'accountType'),
 		get_post($conn, 'firstname'), get_post($conn, 'lastname'),
 		get_post($conn, 'phone'), get_post($conn, 'address'))) {
 		$accountCreated = true;
@@ -121,6 +121,13 @@ echo <<<_END
 	        </div>
 	        
 	        <div class="form-group">
+	            <label for="role">Account type</label>
+	            <select class="form-control" name="accountType" id="accountType" required>
+	                <option value="customer">Customer</option>
+	                <option value="admin">Admin</option>
+	            </select>
+	        </div>
+	   		<div class="form-group">
 	            <button type="submit" name="create" id="create" class="btn btn-primary">Create</button>
 	        </div>
 	    </form>

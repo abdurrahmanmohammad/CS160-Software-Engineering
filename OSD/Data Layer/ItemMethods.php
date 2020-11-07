@@ -122,8 +122,8 @@ function ItemInsert($conn, $itemID, $title, $price, $weight, $description) {
 		$stmt->bind_param('ssdds', $itemID, $title, $price, $weight, $description); // Bind params for sanitization
 		$output = $stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
 		$stmt->close(); // Close statement
-		InventoryInsert($conn, $itemID, 'A', 0, null); // Create inventory object for warehouse A
-		InventoryInsert($conn, $itemID, 'B', 0, null); // Create inventory object for warehouse B
+		//InventoryInsert($conn, $itemID, 'A', 0, null); // Create inventory object for warehouse A
+		//InventoryInsert($conn, $itemID, 'B', 0, null); // Create inventory object for warehouse B
 		return true; // Return if successful insert
 	}
 	return false; // If prepared statement failed, return false
