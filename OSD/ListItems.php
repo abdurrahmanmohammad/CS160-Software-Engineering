@@ -1,15 +1,16 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
 
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+
 echo <<<_END
 <html>
 <head>
-<title>Customer Accounts</title>
+<title>View Items</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -24,10 +25,10 @@ echo <<<_END
     });
     </script>
     <div class="container">
-        <h1>Customer Accounts</h1>
+        <h1>Items</h1>
         <hr>
-        <a href="AdminCreateAccount.php" class="btn">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Create Account</button>
+        <a href="CreateItem.php" class="btn">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Create Item</button>
         </a>
          <a href="AdminPortal.php" class="btn">
             <button type="button" class="btn btn-sm btn-outline-secondary">Back to homepage</button>
@@ -36,62 +37,58 @@ echo <<<_END
 </html>
 _END;
 
-if(isset($_POST['delete']) && isset($_POST['email'])) {
-	AccountDelete($conn, get_post($conn, 'email'));
+if(isset($_POST['delete']) && isset($_POST['itemID'])) {
+	ItemDelete($conn, get_post($conn, 'itemID'), null, null, null, null);
 	/* Print confirmation message */
 	echo <<<_END
-	<div class="alert alert-primary" role="alert">User deleted!</div>
+	<div class="alert alert-primary" role="alert">Item deleted!</div>
 	_END;
 }
 
 
-PrintAccounts($conn);
+PrintItems($conn);
 
 
-function PrintAccounts($conn) {
-	$accounts = AccountSearchType($conn, "customer");
+function PrintItems($conn) {
+	$items = ItemSearch($conn, null, null, null, null, null); // Get all items
 	echo <<<_END
 	<table class="table table-bordered">
 	<thead>
 	   <tr>
-	      <th>Username</th>
-	      <th>Account Type</th>
-	      <th>First name</th>
-	      <th>Last name</th>
-	      <th>Phone</th>
-	      <th>Address</th>
+	      <th>Item ID</th>
+	      <th>Title</th>
+	      <th>Price ($)</th>
+	      <th>Weight (oz)</th>
+	      <th>Description</th>
 	      <th>Update</th>
 	      <th>Delete</th>
 	   </tr>
 	</thead>
 	_END;
 
-
-	foreach($accounts as $account) {
+	foreach($items as $item) {
 		echo <<<_END
 			<tr>
-				<td>{$account['email']}</td>
-				<td>{$account['accountType']}</td>
-				<td>{$account['firstname']}</td>
-				<td>{$account['lastname']}</td>
-				<td>{$account['phone']}</td>
-				<td>{$account['address']}</td>
+				<td>{$item['itemID']}</td>
+				<td>{$item['title']}</td>
+				<td>{$item['price']}</td>
+				<td>{$item['weight']}</td>
+				<td>{$item['description']}</td>
 				<td>
-					<form action="UpdateAccount.php" method="post" enctype='multipart/form-data'>
-						<input type="hidden" name="OLD_email" value="{$account['email']}">
+					<form action="UpdateItem.php" method="post" enctype='multipart/form-data'>
+						<input type="hidden" name="OLD_itemID" value="{$item['itemID']}">
 						<button type="submit" class="btn btn-primary" name="update">Update</button>
 					</form>
 				</td>
 			<td>
-					<form action="CustomerAccounts.php" method="post" enctype='multipart/form-data'>
-						<input type="hidden" name="email" value="{$account['email']}">
+					<form action="ListItems.php" method="post" enctype='multipart/form-data'>
+						<input type="hidden" name="itemID" value="{$item['itemID']}">
 						<button type="submit" class="btn btn-primary" name="delete">Delete</button>
 					</form>
 				</td>
 			</tr>
 		_END;
 	}
-
 	echo <<<_END
 	</table>
 	_END;

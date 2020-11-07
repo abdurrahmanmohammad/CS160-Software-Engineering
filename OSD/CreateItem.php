@@ -16,17 +16,6 @@ $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 // Test connection: $conn->connect_error will not be printed (for debugging purposes only)
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error));
 
-/** If submit button clicked and all the fields are set: Create Item */
-if(isset($_POST['itemID']) && isset($_POST['title']) && isset($_POST['price']) && isset($_POST['weight']) && isset($_POST['description'])
-	&& isset($_FILES['picture']) && isset($_POST['quantityA']) && isset($_POST['quantityB'])) {
-	$itemID = get_post($conn, 'itemID'); // Retrieve itemID
-	// Checks if item exists and inserts if item DNE
-	if(CreateItem($conn)) echo "Item created!"; // Replace with JS message
-	else echo "Error: Item already exists!"; // Replace with JS message
-}
-
-/** Close the connection before exiting */
-$conn->close(); // Close the connection before exiting
 
 /** Prints webpage to create user */
 echo <<<_END
@@ -50,13 +39,34 @@ echo <<<_END
 <body>
 <div id="nav-placeholder"></div>
 <script>
-    $.get("./nav.html", function (data) {
+    $.get("./nav_admin.html", function (data) {
         $("#nav-placeholder").replaceWith(data);
     });
 </script>
 <div class="container">
     <h1>Create Item</h1>
     <hr>
+_END;
+
+
+/** If submit button clicked and all the fields are set: Create Item */
+if(isset($_POST['itemID']) && isset($_POST['title']) && isset($_POST['price']) && isset($_POST['weight']) && isset($_POST['description'])
+	&& isset($_FILES['picture']) && isset($_POST['quantityA']) && isset($_POST['quantityB'])) {
+	$itemID = get_post($conn, 'itemID'); // Retrieve itemID
+	// Checks if item exists and inserts if item DNE
+	if(CreateItem($conn)) echo <<<_END
+    <div class="alert alert-primary" role="alert">Item created!</div>
+    _END;
+	else echo <<<_END
+    <div class="alert alert-primary" role="alert">Failed: Item exists!</div>
+    _END;
+}
+
+/** Close the connection before exiting */
+$conn->close(); // Close the connection before exiting
+
+
+echo <<<_END
     <form action="CreateItem.php" method="post" enctype='multipart/form-data'>
         <div class="form-group">
             <label for="itemID">Product ID</label>
@@ -145,26 +155,34 @@ function CreateItem($conn) {
 	$quantityB = sanitizeMySQL($conn, get_post($conn, 'quantityA')); // Get quantity & sanitize
 	$description = sanitizeMySQL($conn, get_post($conn, 'description')); // Get description & sanitize
 	//echo $itemID."<br>".$title."<br>".$price."<br>".$weight."<br>".$quantityA."<br>".$quantityB."<br>".$description;
-	/* Upload picture and retrieve filename */
-	$picture = uploadPicture(get_post($conn, 'title')); // Get directory of where the picture was stored
-	if(is_null($picture)) return false;
 	/* Insert item into DB */
 	if(!ItemInsert($conn, $itemID, $title, $price, $weight, $description)) { // Try to item picture in DB
-		echo "Item insert failed!<br>"; // Replace with JS message
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Item insert failed!</div>
+    _END;
 		return false; // Try to item picture in DB
 	}
 	/* Insert item inventory into DB */
 	if(!InventoryInsert($conn, $itemID, 'A', $quantityA, null)) { // Try to item picture in DB
-		echo "Inventory A insert failed!<br>"; // Replace with JS message
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Inventory A insert failed!</div>
+    _END;
 		return false; // Try to item picture in DB
 	}
 	if(!InventoryInsert($conn, $itemID, 'B', $quantityB, null)) { // Try to item picture in DB
-		echo "Inventory B insert failed!<br>"; // Replace with JS message
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Inventory B insert failed!</div>
+    _END;
 		return false; // Try to item picture in DB
 	}
+	/* Upload picture and retrieve filename */
+	$picture = uploadPicture(get_post($conn, 'title')); // Get directory of where the picture was stored
+	if(is_null($picture)) return false;
 	/* Insert picture into DB */
 	if(!PictureInsert($conn, $itemID, $picture)) { // Try to insert picture in DB
-		echo "Picture insert failed!<br>"; // Replace with JS message
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Picture insert failed!</div>
+    _END;
 		return false;
 	}
 	return true; // Successful item creation
@@ -204,10 +222,14 @@ function uploadPicture($title) {
 	}
 
 	/* Upload file to server */
-	if(move_uploaded_file($_FILES["picture"]["tmp_name"], $filename)) {
-		echo "Picture uploaded: $filename<br>"; // Replace with JS message
-	} else {
-		echo "Could not upload: $filename<br>"; // Replace with JS message
+	if(move_uploaded_file($_FILES["picture"]["tmp_name"], $filename))
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Picture uploaded: $filename</div>
+    _END;
+	else {
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Could not upload: $filename</div>
+    _END;
 		return null;
 	}
 	return $filename; // Return the filename
