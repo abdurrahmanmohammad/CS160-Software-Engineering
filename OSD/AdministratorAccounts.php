@@ -3,6 +3,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import databa
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
 
+/** Authenticate user on page */
+$account = authenticate();
+
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection

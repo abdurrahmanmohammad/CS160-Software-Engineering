@@ -3,9 +3,8 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import databa
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
 
-/** Set up connection to DB */
-$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
-if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+/** Authenticate user on page */
+$account = authenticate();
 
 echo <<<_END
 <html>
@@ -36,6 +35,10 @@ echo <<<_END
 </body>
 </html>
 _END;
+/** Set up connection to DB */
+$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
+if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+
 
 if(isset($_POST['delete']) && isset($_POST['itemID'])) {
 	ItemDelete($conn, get_post($conn, 'itemID'), null, null, null, null);
@@ -60,6 +63,8 @@ function PrintItems($conn) {
 	      <th>Price ($)</th>
 	      <th>Weight (oz)</th>
 	      <th>Description</th>
+	      <th>Categories</th>
+	      <th>Pictures</th>
 	      <th>Update</th>
 	      <th>Delete</th>
 	   </tr>
@@ -67,26 +72,39 @@ function PrintItems($conn) {
 	_END;
 
 	foreach($items as $item) {
+		if($item != null)
 		echo <<<_END
-			<tr>
-				<td>{$item['itemID']}</td>
-				<td>{$item['title']}</td>
-				<td>{$item['price']}</td>
-				<td>{$item['weight']}</td>
-				<td>{$item['description']}</td>
-				<td>
-					<form action="UpdateItem.php" method="post" enctype='multipart/form-data'>
-						<input type="hidden" name="OLD_itemID" value="{$item['itemID']}">
-						<button type="submit" class="btn btn-primary" name="update">Update</button>
-					</form>
-				</td>
-			<td>
-					<form action="ListItems.php" method="post" enctype='multipart/form-data'>
-						<input type="hidden" name="itemID" value="{$item['itemID']}">
-						<button type="submit" class="btn btn-primary" name="delete">Delete</button>
-					</form>
-				</td>
-			</tr>
+		<tr>
+		   <td>{$item['itemID']}</td>
+		   <td>{$item['title']}</td>
+		   <td>{$item['price']}</td>
+		   <td>{$item['weight']}</td>
+		   <td>{$item['description']}</td>
+		   <td>
+		      <form action="ManageCategories.php" method="post" enctype='multipart/form-data'>
+		         <input type="hidden" name="itemID" value="{$item['itemID']}">
+		         <button type="submit" class="btn btn-primary" name="update">Manage</button>
+		      </form>
+		   </td>
+		   <td>
+		      <form action="ManagePictures.php" method="post" enctype='multipart/form-data'>
+		         <input type="hidden" name="itemID" value="{$item['itemID']}">
+		         <button type="submit" class="btn btn-primary" name="delete">Manage</button>
+		      </form>
+		   </td>
+		   <td>
+		      <form action="UpdateItem.php" method="post" enctype='multipart/form-data'>
+		         <input type="hidden" name="OLD_itemID" value="{$item['itemID']}">
+		         <button type="submit" class="btn btn-primary" name="update">Update</button>
+		      </form>
+		   </td>
+		   <td>
+		      <form action="ListItems.php" method="post" enctype='multipart/form-data'>
+		         <input type="hidden" name="itemID" value="{$item['itemID']}">
+		         <button type="submit" class="btn btn-primary" name="delete">Delete</button>
+		      </form>
+		   </td>
+		</tr>
 		_END;
 	}
 	echo <<<_END

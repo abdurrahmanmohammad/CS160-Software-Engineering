@@ -64,6 +64,17 @@ function CategoryDelete($conn, $itemID, $category) {
 	return false; // If prepared statement failed, return false
 }
 
+function CategoryDeleteItemID($conn, $itemID) {
+	if(!$conn) return null; // DB connection must be passed in
+	if($stmt = $conn->prepare("DELETE FROM Category WHERE itemID=?;")) { // Sanitize vars with prepared statement
+		$stmt->bind_param('s', $itemID); // Bind params for sanitization
+		$output = $stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
+		$stmt->close(); // Close statement
+		return $output; // Return if successful insert
+	}
+	return false; // If prepared statement failed, return false
+}
+
 function CategoryExists($conn, $itemID, $category) {
 	if(!$conn) return null; // DB connection must be passed in
 	if($stmt = $conn->prepare("SELECT * FROM Category WHERE itemID=? AND category=?;")) {

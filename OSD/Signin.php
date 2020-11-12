@@ -10,7 +10,21 @@ $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
 
 if(isset($_POST['email']) && isset($_POST['password'])) {
-	if(!CheckPassword($conn)) echo "Invalid username/password combination"; // Replace with JS message
+	$account = CheckPassword($conn); // Get account of user from DB
+	if(is_null($account))
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Invalid username/password combination!</div>
+		_END; // Print error message
+	else { // Start session and authenticate user
+		session_start();
+		ini_set('session.gc_maxlifetime', 60 * 60 * 24); // Setting a Time-Out for cookie
+		$_SESSION['account'] = $account; // Store user's account in session
+		/* Additional Checks: Preventing session hijacking */
+		$_SESSION['check'] = hash('ripemd128', $_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
+		/* Redirect user to their portal */
+		if($account['accountType'] == 'admin') header("Location: AdminPortal.php"); // Change to admin portal
+		elseif($account['accountType'] == 'customer') header("Location: CustomerPortal.php"); // Change to customer portal
+	}
 }
 
 /** Print login page */
@@ -48,15 +62,14 @@ _END;
 /**
  * Retrieves inputted email and password and verifies account and password
  * @param $conn
- * @return bool
  */
 function CheckPassword($conn) {
 	/* Retrieve inputs */
 	$account = AccountSearch($conn, get_post($conn, 'email')); // Retrieve account from DB using email
 	$password = password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
 	/* Checks: account should exist with associated email and hashed passwords should match */
-	if(is_null($account)) return false; // User does not exist
-	elseif(!password_verify(get_post($conn, 'password'), $account['password'])) return false; // Invalid password
+	if(is_null($account)) return null; // User does not exist
+	elseif(!password_verify(get_post($conn, 'password'), $account['password'])) return null; // Invalid password
 	/* Create and start session */
 	session_start();
 	ini_set('session.gc_maxlifetime', 60 * 60 * 24); // Setting a Time-Out for cookie
@@ -65,11 +78,7 @@ function CheckPassword($conn) {
 	$_SESSION['check'] = hash('ripemd128', $_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']);
 	//echo "Hi {$account['firstname']} {$account['lastname']}, you are now logged in!"; // Replace with JS message
 	/* If authenticate user, go to user's homepage based on type */
-	if($account['accountType'] == 'admin')
-		header("Location: AdminPortal.php"); // ***Change to admin portal
-	elseif($account['accountType'] == 'customer')
-		header("Location: CustomerPortal.php"); // ***Change to customer portal
-	// return true; // User account and password are authenticated
+	return $account; // User account and password are authenticated
 }
 
 /*echo <<< _END

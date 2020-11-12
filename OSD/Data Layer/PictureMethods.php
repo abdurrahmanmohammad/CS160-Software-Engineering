@@ -62,7 +62,9 @@ function PictureDelete($conn, $itemID, $directory) {
 		$stmt->bind_param('ss', $itemID, $directory); // Bind params for sanitization
 		$output = $stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
 		$stmt->close(); // Close statement
-		return $output; // Return if successful insert
+		if(file_exists($directory))
+			unlink($directory); // Check if file exists then delete
+		return $output; // Return if successful delete
 	}
 	return false; // If prepared statement failed, return false
 }
@@ -77,5 +79,59 @@ function PictureExists($conn, $itemID, $directory) {
 		$stmt->close(); // Close statement
 		return $rowcount; // Return rowcount
 	}
+}
+
+/**
+ * Upload an item picture
+ * @param $title
+ * @return string|null
+ */
+function uploadPicture($itemID, $title) {
+	if(is_null($title))
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Title is null</div>
+		_END;
+	$target_dir = "Pictures/"; // Target folder to store picture
+	$extension = strtolower(pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION)); // Get file extension
+
+	/* Check if file is a valid picture */
+	if(!$check = exif_imagetype($_FILES["picture"]["tmp_name"])) {
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">File is not an image!</div>
+		_END;
+		return null; // Fail to upload
+	}
+
+	/* Create a unique filename */
+	$i = 0;
+	while(file_exists($target_dir.$title.$itemID."(".$i.").".$extension)) $i++; // Get a unique filename
+	$filename = $target_dir.$title.$itemID."(".$i.").".$extension; // Filename: ex. item0.jpg
+
+	/* Check if file is too large */
+	/*if($_FILES["picture"]["size"] > 500000) {
+		echo "Picture is too large!<br>";
+		return false; // Fail to upload
+	}*/
+
+	/* Only certain types of pictures are allowed: jpg, jpeg, png, gif */
+	if($extension != "jpg" && $extension != "png" && $extension != "jpeg" && $extension != "gif") {
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Invalid type!<br>Given: $extension<br>Allowed: JPG, JPEG, PNG & GIF</div>
+		_END;
+		return null; // Fail to upload
+	}
+
+	/* Upload file to server */
+	if(move_uploaded_file($_FILES["picture"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/".$filename))
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Picture uploaded: $filename</div>
+		_END;
+	else {
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Could not upload: $filename</div>
+		_END;
+
+	}
+	return $filename; // Return the filename
 }
 

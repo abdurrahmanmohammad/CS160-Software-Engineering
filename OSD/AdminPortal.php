@@ -1,4 +1,9 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Directory of file
+
+/** Authenticate user on page */
+$account = authenticate();
+
 echo <<<_END
 <html>
 <head>
@@ -27,7 +32,7 @@ echo <<<_END
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a product item.</p>
-                <a href="#" class="btn">
+                <a href="ListItems.php" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>
@@ -38,7 +43,7 @@ echo <<<_END
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a product category.</p>
-                <a href="listCategory.php" class="btn">
+                <a href="ListItems.php" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>
@@ -49,7 +54,7 @@ echo <<<_END
               </div>
               <div class="card-body">
                 <p class="card-title"> You can create, edit, and delete a user.</p>
-                <a href="listUser.php" class="btn">
+                <a href="CustomerAccounts.php" class="btn">
                     <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                 </a>
               </div>

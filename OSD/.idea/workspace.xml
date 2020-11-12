@@ -25,15 +25,15 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/Testing" />
-      <recent name="$PROJECT_DIR$/Test" />
-      <recent name="$PROJECT_DIR$/Item" />
-      <recent name="$PROJECT_DIR$/Data Layer" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/Data Layer" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Testing" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/Test" />
+      <recent name="$PROJECT_DIR$/Item" />
       <recent name="$PROJECT_DIR$/Data Layer" />
     </key>
   </component>
@@ -80,7 +80,9 @@
       <workItem from="1604671741135" duration="1988000" />
       <workItem from="1604675408734" duration="46000" />
       <workItem from="1604709607562" duration="12362000" />
-      <workItem from="1604725992456" duration="1205000" />
+      <workItem from="1604725992456" duration="2025000" />
+      <workItem from="1604975457552" duration="1352000" />
+      <workItem from="1605142030181" duration="16469000" />
     </task>
     <servers />
   </component>
@@ -106,10 +108,11 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="456" y="270" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.877@0.23.1440.877" timestamp="1603761766353" />
-    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1604723154488">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="458" y="222" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1605155155113">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1604723154488" />
+    <state x="458" y="222" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.877@0.23.1440.877" timestamp="1605155155113" />
     <state width="1398" height="230" key="GridCell.Tab.0.bottom" timestamp="1603773990283">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -134,11 +137,11 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="471" y="183" key="NewPhpClassDialog/0.0.1440.900@0.0.1440.900" timestamp="1604554901305" />
-    <state x="543" y="380" key="NewPhpFileDialog" timestamp="1604726945689">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="543" y="393" key="NewPhpFileDialog" timestamp="1605160151724">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="543" y="380" key="NewPhpFileDialog/0.0.1440.900@0.0.1440.900" timestamp="1604726945689" />
-    <state x="543" y="393" key="NewPhpFileDialog/0.23.1440.877@0.23.1440.877" timestamp="1603766376992" />
+    <state x="543" y="393" key="NewPhpFileDialog/0.23.1440.877@0.23.1440.877" timestamp="1605160151724" />
     <state x="324" y="78" width="1440" height="877" key="SettingsEditor" timestamp="1603333078804">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -148,6 +151,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="500" height="445" key="SwitcherDM/0.0.1440.900@0.0.1440.900" timestamp="1603066998607" />
+    <state x="0" y="94" width="928" height="858" key="dock-window-1" timestamp="1605157646856">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="0" y="94" width="928" height="858" key="dock-window-1/0.23.1440.877@0.23.1440.877" timestamp="1605157646856" />
     <state x="427" y="82" width="586" height="735" key="find.popup" timestamp="1603391336480">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -156,10 +163,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="504" y="248" key="refactoring.ChangeSignatureDialog/0.0.1440.900@0.0.1440.900" timestamp="1603145109786" />
-    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup" timestamp="1603954274494">
+    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup" timestamp="1605151584112">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1603152697519" />
-    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1603954274494" />
+    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1605151584112" />
   </component>
 </project>

@@ -1,6 +1,8 @@
 <?php
 require_once 'DatabaseSecurityMethods.php'; // Load methods for error and sanitization
 require_once 'InventoryMethods.php'; // Load methods for Inventory table
+require_once 'CategoryMethods.php';
+require_once 'PictureMethods.php';
 
 /**
  * ###############################################################################
@@ -146,6 +148,12 @@ function ItemDelete($conn, $itemID, $title, $price, $weight, $description) {
 	$output = $conn->query($stmt); // Execute statement: Success = TRUE, Fail = FALSE
 	//$stmt->close(); // Close statement for security
 	InventoryDelete($conn, $itemID, null, null, null); // Delete all inventories for this item
+	/* Delete all categories associated with this item */
+	CategoryDeleteItemID($conn, $itemID);
+	/* Delete all the pictures associated with this item */
+	$pictures = PictureSearch($conn, $itemID); // Get all pictures for an item
+	foreach($pictures as $picture)
+		PictureDelete($conn, $itemID, $picture['directory']); // Delete the picture from the DB and server
 	return $output; // Return true if successful, false if failure
 }
 
@@ -160,7 +168,6 @@ function ItemExists($conn, $itemID) {
 		return $rowcount; // Return rowcount
 	}
 }
-
 
 /**
  * Update an existing item by using itemID

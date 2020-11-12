@@ -11,6 +11,9 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load it
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory DB methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php'; // Load picture DB methods
 
+/** Authenticate user on page */
+$account = authenticate();
+
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 // Test connection: $conn->connect_error will not be printed (for debugging purposes only)
@@ -46,6 +49,12 @@ echo <<<_END
 <div class="container">
     <h1>Create Item</h1>
     <hr>
+	<a href="ListItems.php" class="btn">
+	<button type="button" class="btn btn-sm btn-outline-secondary">Manage Items</button>
+	</a>
+	<a href="AdminPortal.php" class="btn">
+	<button type="button" class="btn btn-sm btn-outline-secondary">Admin Portal</button>
+	</a>
 _END;
 
 
@@ -86,7 +95,7 @@ echo <<<_END
                     <label for="price">Weight</label>
                     <input type="text" class="form-control" id="price" name="price" step="0.01" min="0.01"
                            max="999999.99"
-                           aria-describedby="productWeightHelp" placeholder="Enter product Weight" required>
+                           aria-describedby="productWeightHelp" placeholder="Enter product price" required>
                 </div>
             </div>
             <div class="col">
@@ -176,7 +185,7 @@ function CreateItem($conn) {
 		return false; // Try to item picture in DB
 	}
 	/* Upload picture and retrieve filename */
-	$picture = uploadPicture(get_post($conn, 'title')); // Get directory of where the picture was stored
+	$picture = uploadPicture($itemID, $title); // Get directory of where the picture was stored
 	if(is_null($picture)) return false;
 	/* Insert picture into DB */
 	if(!PictureInsert($conn, $itemID, $picture)) { // Try to insert picture in DB
@@ -188,49 +197,3 @@ function CreateItem($conn) {
 	return true; // Successful item creation
 }
 
-/**
- * Upload an item picture
- * @param $title
- * @return string|null
- */
-function uploadPicture($title) {
-	// https://www.w3schools.com/php/php_file_upload.asp
-	$target_dir = $_SERVER['DOCUMENT_ROOT']."/Pictures/"; // Target folder to store picture
-	$extension = strtolower(pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION)); // Get file extension
-
-	/* Check if file is a valid picture */
-	if(!$check = exif_imagetype($_FILES["picture"]["tmp_name"])) {
-		echo "File is not an image!<br>"; // Replace with JS message
-		return null; // Fail to upload
-	}
-
-	/* Create a unique filename */
-	$i = 0;
-	while(file_exists($target_dir.$title.$i.".".$extension)) $i++; // Get a unique filename
-	$filename = $target_dir.$title.$i.".".$extension; // Filename: ex. item0.jpg
-
-	/* Check if file is too large */
-	/*if($_FILES["picture"]["size"] > 500000) {
-		echo "Picture is too large!<br>";
-		return false; // Fail to upload
-	}*/
-
-	/* Only certain types of pictures are allowed: jpg, jpeg, png, gif */
-	if($extension != "jpg" && $extension != "png" && $extension != "jpeg" && $extension != "gif") {
-		echo "Invalid type!<br>Given: $extension<br>Allowed: JPG, JPEG, PNG & GIF<br>";
-		return null; // Fail to upload
-	}
-
-	/* Upload file to server */
-	if(move_uploaded_file($_FILES["picture"]["tmp_name"], $filename))
-		echo <<<_END
-    <div class="alert alert-primary" role="alert">Picture uploaded: $filename</div>
-    _END;
-	else {
-		echo <<<_END
-    <div class="alert alert-primary" role="alert">Could not upload: $filename</div>
-    _END;
-		return null;
-	}
-	return $filename; // Return the filename
-}
