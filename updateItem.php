@@ -1,98 +1,157 @@
-<!-- Write your comments here -->
-<!-- View/update item page - click item on homepage, go to this page, 
-    display image and description, allows fields to be modified, 
-    include a separate list of inventory table fields -->
+<?php
 
-<!DOCTYPE html>
+/** Import methods */
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load item database methods
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory database methods
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/CategoryMethods.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php';
+
+/** Authenticate user on page */
+$account = authenticate();
+
+echo <<<_END
 <html>
+   <head>
+      <title>Update Item</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+   </head>
+   <body>
+      <div id="nav-placeholder"></div>
+      <script>
+         $.get("./nav_admin.html", function(data) {
+             $("#nav-placeholder").replaceWith(data);
+         });
+      </script>
+      <div class="container">
+         <h1>Update Item</h1>
+         <hr>
+        <a href="ListItems.php" class="btn">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Manage Items</button>
+        </a>
+         <a href="AdminPortal.php" class="btn">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Admin Portal</button>
+        </a>
+_END;
 
-<head>
-    <title>Update Item</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-</head>
+/** Set up connection to DB */
+$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
+if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
 
-<body>
-    <div id="nav-placeholder"></div>
-    <script>
-    $.get("./nav_admin.html", function(data) {
-        $("#nav-placeholder").replaceWith(data);
-    });
-    </script>
-    <div class="container">
-        <h1>Update Item</h1>
-        <hr>
-        <form>
+/** @var $itemID */
+$itemID = sanitizeMySQL($conn, get_post($conn, 'itemID')); // Extract item ID from previous page
+//PrintInventories($item); // Print inventory information
+
+
+/** Update item */
+if(isset($_POST['UpdateItem']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	ItemUpdateByItemID($conn, get_post($conn, 'OLD_itemID'), get_post($conn, 'itemID'), get_post($conn, 'title'),
+		get_post($conn, 'price'), get_post($conn, 'weight'), get_post($conn, 'description'));
+	echo <<<_END
+    <div class="alert alert-primary" role="alert">Item $itemID updated!</div>
+    _END;
+}
+
+/** Delete item */
+if(isset($_POST['DeleteItem']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	ItemDelete($conn, $itemID, null, null, null, null);
+	echo <<<_END
+    <div class="alert alert-primary" role="alert">Item $itemID deleted!</div>
+    _END;
+	header("Location: ListItems.php");
+}
+
+/** Update inventory A */
+if(isset($_POST['quantityA']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	InventoryUpdateQuantity($conn, $itemID, 'A', get_post($conn, 'quantityA'));
+	echo <<<_END
+    <div class="alert alert-primary" role="alert">Inventory B updated!</div>
+    _END;
+}
+
+/** Update inventory B */
+if(isset($_POST['quantityB']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	InventoryUpdateQuantity($conn, $itemID, 'B', get_post($conn, 'quantityB'));
+	echo <<<_END
+    <div class="alert alert-primary" role="alert">Inventory A updated!</div>
+    _END;
+}
+
+
+
+$item = ItemSearch($conn, $itemID, null, null, null, null)[0]; // Get item from DB
+$inventory = InventorySearch($conn, $itemID, null, null, null);
+$inventoryA = $inventory[0];
+$inventoryB = $inventory[1];
+
+echo <<<_END
+         <form action="UpdateItem.php" method="post">
             <div class="form-group">
-                <label for="productName">Product Name</label>
-                <input type="text" class="form-control" id="productNameInput" aria-describedby="productNameHelp"
-                    value="some retrived product name" placeholder="Enter product name" required>
+               <label for="itemID">Product ID</label>
+               <input type="text" class="form-control" aria-describedby="itemIDHelp"
+                  id="itemID" name="itemID" value="{$item['itemID']}" placeholder="Enter itemID" required>
+            </div>
+            <div class="form-group">
+               <label for="productTitle">Product Title</label>
+               <input type="text" class="form-control" aria-describedby="productNameHelp" 
+                  id="title" name="title" value="{$item['title']}" placeholder="Product title" required>
             </div>
             <div class="form-row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="productWeight">Product Weight</label>
-                        <input type="text" class="form-control" id="productWeightInput"
-                            aria-describedby="productWeightHelp" value="some retrived product Weight"
-                            placeholder="Enter product Weight" required>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="productSize">Product Size</label>
-                        <input type="text" class="form-control" id="productSizeInput" aria-describedby="productSizeHelp"
-                            value="some retrived product Size" placeholder="Enter product Size" required>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="productCategory">Product Category</label>
-                        <select class="form-control" id="productCategory" required>
-                            <option value="1">Category 1</option>
-                            <option value="2">Category 2</option>
-                        </select>
-                    </div>
-                </div>
+               <div class="col">
+                  <label for="price">Product Price</label>
+                  <input type="number" class="form-control" aria-describedby="productSizeHelp"
+                     id="title" name="title" step="0.01" min="0.01" max="999999.99"
+                     value="{$item['title']}" placeholder="Enter product price" required>
+               </div>
+               <div class="col">
+                  <div class="form-group">
+                     <label for="weight">Product Weight</label>
+                     <input type="text" class="form-control" aria-describedby="productWeightHelp" 
+                        id="weight" name="weight" tep="0.01" min="0.01" max="999999.99"
+                        value="{$item['weight']}" placeholder="Enter product Weight" required>
+                  </div>
+               </div>
             </div>
             <div class="form-group">
-                <label for="productDescription">Product Description</label>
-                <textarea class="form-control" id="productDescription" rows="3">12345</textarea>
+               <label for="description">Product Description</label>
+               <textarea class="form-control" id="description" name="description" rows="3" 
+               placeholder="Product description ...">{$item['description']}</textarea>
             </div>
-            <div class="form-group">
-                <label for="uploadProductImage1">Product Image 1</label>
-                <img class="d-block w-10" src="./images/itemImage1.jpg">
-                <input type="file" class="form-control-file" id="productImageUpload1" required>
-            </div>
-            <div class="form-group">
-                <label for="uploadProductImage2">Product Image 2</label>
-                <img class="d-block w-10" src="./images/itemImage2.jpg">
-                <input type="file" class="form-control-file" id="productImageUpload2">
-            </div>
-            <div class="form-group">
-                <label for="productWarehouse">Product warehoue locate</label>
-                <select class="form-control" id="productWarehouse" required>
-                    <option value="1">Warehouse 1</option>
-                    <option value="2" selected>Warehouse 2</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="productAmount">Product Amount</label>
-                <input type="number" class="form-control" id="productAmountInput" value="100" placeholder="Amount"
-                    required>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-    </div>
-</body>
-
+         
+         
+         
+         
+         <div class="form-group">
+            <label for="quantity">Warehouse A</label>
+            <input type="number" class="form-control" min="0" max="32000"
+                   id="quantityA" name="quantityA" value="{$inventoryA['quantity']}" placeholder="Quantity in stock" required>
+             <a>Last updated: {$inventoryA['last_update']} </a>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Warehouse B</label>
+            <input type="number" class="form-control" min="0" max="32000"
+                   id="quantityB" name="quantityB" value="{$inventoryB['quantity']}" placeholder="Quantity in stock" required>
+             <a>Last updated: {$inventoryB['last_update']} </a>
+        </div>
+        
+        
+            <input type="hidden" id="OLD_itemID" name="OLD_itemID" value="{$item['itemID']}">
+            <button type="submit" class="btn btn-primary" id="UpdateItem" name="UpdateItem">Update</button>
+            <button type="submit" class="btn btn-primary" id="DeleteItem" name="DeleteItem">Delete</button>
+         </form>
+      </div>
+   </body>
 </html>
+_END;
+
+/** Close DB connection before exiting */
+$conn->close(); // Close the connection before exiting
