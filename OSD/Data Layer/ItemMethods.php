@@ -1,5 +1,5 @@
 <?php
-require_once 'DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 require_once 'InventoryMethods.php'; // Load methods for Inventory table
 require_once 'CategoryMethods.php';
 require_once 'PictureMethods.php';
@@ -21,6 +21,7 @@ require_once 'PictureMethods.php';
  * @return null
  */
 function ItemSearchByItemID($conn, $itemID) {
+	if(is_null($conn) || is_null($itemID)) return;
 	if($stmt = $conn->prepare("SELECT * FROM Item WHERE itemID=?;")) { // Placeholders for further sanitization
 		$stmt->bind_param("s", $itemID); /* bind parameters for markers */
 		$stmt->execute(); /* execute query */
@@ -222,6 +223,7 @@ function ItemSearch($conn, $itemID, $title, $price, $weight, $description) {
 	$result->close(); // Close statement for security
 	return $output; // Return the result as a 2D array
 }
+
 
 /**
  * Sanitizes variables and determines which variable conditions to add to SQL statement

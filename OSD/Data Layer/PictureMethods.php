@@ -1,5 +1,5 @@
 <?php
-require_once 'DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 
 /**
  * #######################################################################################

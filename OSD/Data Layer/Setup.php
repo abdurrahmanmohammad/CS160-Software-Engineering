@@ -5,8 +5,9 @@ require_once 'ItemMethods.php';
 require_once 'InventoryMethods.php';
 require_once 'PictureMethods.php';
 require_once 'CategoryMethods.php';
-// require_once 'DatabaseSecurityMethods.php'; // Can access from same package
-// require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Directory of file
+require_once 'CartMethods.php';
+// require_once 'DatabaseMethods.php'; // Can access from same package
+// require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Directory of file
 // require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Directory of file
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
 
@@ -74,4 +75,8 @@ function buildTables($conn) {
 	$password = password_hash("CS160", PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
 	AccountInsert($conn, "admin@admin.com", $password, "admin", "admin", "admin", "admin", "admin");
 	echo "--> Admin inserted!<br>";
+
+	/** Account(email, itemID, multiplicity) */
+	CartInitialize($conn);
+	echo "--> Table 'Cart' built successfully!<br>";
 }

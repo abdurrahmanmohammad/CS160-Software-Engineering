@@ -1,5 +1,5 @@
 <?php
-require_once 'DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 require_once 'ItemMethods.php'; // Load methods Item table
 /**
  * ###############################################################################
@@ -119,6 +119,19 @@ function InventorySearch($conn, $itemID, $warehouse, $quantity, $last_update) {
 	// If no rows returned, don't store anything
 	$result->close(); // Close statement for security
 	return $output; // Return the result as a 2D array
+}
+
+function InventorySearchByItemID($conn, $itemID, $warehouse) {
+	if(is_null($conn) || is_null($itemID) || is_null($warehouse)) return;
+	if($stmt = $conn->prepare("SELECT * FROM Inventory WHERE itemID=? AND warehouse=?;")) { // Placeholders for further sanitization
+		$stmt->bind_param("ss", $itemID, $warehouse); /* bind parameters for markers */
+		$stmt->execute(); /* execute query */
+		$result = $stmt->get_result();
+		$row = $result->fetch_assoc();
+		$stmt->close();
+		return $row;
+	}
+	return null;
 }
 
 

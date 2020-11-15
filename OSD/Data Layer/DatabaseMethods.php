@@ -44,6 +44,21 @@ function sanitizeMySQL($conn, $var) {
 	return $var;
 }
 
+
+/**
+ * Create connection to DB and return connection
+ * @return mysqli
+ */
+function getConnection() {
+	require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
+	$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
+	if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+	return $conn; // Return connection
+}
+
+
+
+
 /**
  * A handy function to destroy a session and its data
  */

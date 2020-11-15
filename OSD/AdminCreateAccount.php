@@ -19,9 +19,9 @@ If form submitted
 		Inform user of error - JS message
 			Print page
 */
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once './Data Layer/Login.php'; // Import database credentials
+require_once './Data Layer/AccountMethods.php'; // Load methods for error and sanitization
+require_once './Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 
 /** Authenticate user on page */
 $account = authenticate();

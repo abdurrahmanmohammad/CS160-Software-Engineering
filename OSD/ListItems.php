@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 
 /** Authenticate user on page */
 $account = authenticate();
@@ -67,6 +67,7 @@ function PrintItems($conn) {
 	      <th>Pictures</th>
 	      <th>Update</th>
 	      <th>Delete</th>
+	      <th>View</th>
 	   </tr>
 	</thead>
 	_END;
@@ -104,6 +105,13 @@ function PrintItems($conn) {
 		         <button type="submit" class="btn btn-primary" name="delete">Delete</button>
 		      </form>
 		   </td>
+		   <td>
+		      <form action="ItemView.php" method="post" enctype='multipart/form-data'>
+		         <input type="hidden" name="itemID" value="{$item['itemID']}">
+		         <button type="submit" class="btn btn-primary" name="delete">View</button>
+		      </form>
+		   </td>
+		</tr>
 		</tr>
 		_END;
 	}

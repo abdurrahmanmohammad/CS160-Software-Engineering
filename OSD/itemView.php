@@ -1,6 +1,27 @@
-<!DOCTYPE html>
-<html>
+<?php
 
+/* Import methods */
+require_once './Data Layer/DatabaseMethods.php';
+require_once './Data Layer/ItemMethods.php';
+require_once './Data Layer/InventoryMethods.php';
+require_once './Data Layer/PictureMethods.php';
+require_once './Data Layer/CartMethods.php';
+
+/* Authenticate user on page */
+$account = authenticate();
+
+/* Get item to view */
+$conn = getConnection(); // Get connection to DB
+$itemID = sanitizeMySQL($conn, get_post($conn, 'itemID')); // Extract item ID from previous page
+$item = ItemSearchByItemID($conn, $itemID); // Get item from DB
+$pictures = PictureSearch($conn, $itemID); // Get item pictures
+$inventoryA = InventorySearchByItemID($conn, $itemID, 'A');
+$inventoryB = InventorySearchByItemID($conn, $itemID, 'B');
+$inStock = $inventoryA['quantity'] + $inventoryB['quantity'];
+
+
+echo <<<_END
+<html>
 <head>
     <title>Item view</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -15,13 +36,12 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
 </head>
 
 <body>
     <div id="nav-placeholder"></div>
     <script>
-    $.get("./nav_admin.html", function(data) {
+    $.get("./nav_customer.html", function(data) {
         $("#nav-placeholder").replaceWith(data);
     });
     </script>
@@ -30,67 +50,111 @@
         <hr>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Some Category</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Some prodct name</li>
+                <li class="breadcrumb-item"><a href="CustomerPortal.php">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{$item['title']}</li>
             </ol>
         </nav>
-        <div class="row">
+_END;
+
+/* Add item to cart */
+if(isset($_POST['AddToCart']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+	$inventoryA = InventorySearchByItemID($conn, $itemID, 'A')['quantity'];
+	$inventoryB = InventorySearchByItemID($conn, $itemID, 'B')['quantity'];
+	if($inventoryA + $inventoryB != 0) { // If there is stock
+		CartInsert($conn, $account['email'], $itemID); // Add item to cart
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Item {$item['title']} added to cart!</div>
+    _END;
+	} else
+		echo <<<_END
+    <div class="alert alert-primary" role="alert">Out of stock!</div>
+    _END;
+
+}
+
+PrintImageCarousel($pictures);
+
+echo <<<_END
             <div class="col">
-                <div id="itemImageCarousel" class="carousel slide" data-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-target="#itemImageCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#itemImageCarousel" data-slide-to="1"></li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img class="d-block w-100" src="./images/itemImage1.jpg" alt="First slide">
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="./images/itemImage2.jpg" alt="Second slide">
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#itemImageCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#itemImageCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-            </div>
-            <div class="col">
-                <h2>Some product name</h2>
-                <p>Price: 1</p>
-                <p>Avaliable warehouse: 1</p>
+                <h2>{$item['title']}</h2>
 
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">Category</th>
-                            <th scope="col">Size</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Item ID</th>
                             <th scope="col">Weight</th>
-                            <th scope="col">xxx</th>
+                            <th scope="col">In stock</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>some Category</td>
-                            <td>10*10*10</td>
-                            <td>1lb</td>
-                            <td>xxx</td>
+                            <td>\${$item['price']}</td>
+                            <td>$itemID</td>
+                            <td>{$item['weight']}lb</td>
+                            <td>$inStock</td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary">Add to cart</button>
+                <form action="ItemView.php" method="post">
+                	<input type="hidden" id="itemID" name="itemID" value="$itemID">
+                	<button type="submit" class="btn btn-primary" id="AddToCart" name="AddToCart">Add to cart</button>
+                </form>
             </div>
         </div>
         <hr>
         <h3>Description</h3>
 
-        <p>some Description</p>
+        <p>{$item['description']}</p>
     </div>
 </body>
 
 </html>
+_END;
+
+
+/**
+ * Prints carousel of item pictures
+ * @param $pictures
+ */
+function PrintImageCarousel($pictures) {
+	echo <<<_END
+	<div class="row">
+	<div class="col">
+	   <div id="itemImageCarousel" class="carousel slide" data-ride="carousel">
+	      <ol class="carousel-indicators">
+	         <li data-target="#itemImageCarousel" data-slide-to="0" class="active"></li>
+	_END;
+	/* Add placeholders on the bottom of the carousel */
+	for($i = 1; $i < sizeof($pictures); $i++)
+		echo <<<_END
+			<li data-target="#itemImageCarousel" data-slide-to="$i"></li>
+		_END;
+	echo <<<_END
+	      </ol>
+	      <div class="carousel-inner">
+	         <div class="carousel-item active">
+	            <img class="d-block w-100" src="{$pictures[0]['directory']}" alt="First slide">
+	         </div>
+	_END;
+	/* Add pictures to carousel */
+	for($i = 1, $picture = $pictures[$i]['directory']; $i < count($pictures); $i++, $picture = $pictures[$i]['directory'])
+		echo <<<_END
+		<div class="carousel-item">
+			<img class="d-block w-100" src="$picture" alt="Next Slide">
+		</div>
+		_END;
+	echo <<<_END
+	      </div>
+	      <a class="carousel-control-prev" href="#itemImageCarousel" role="button" data-slide="prev">
+	        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	        <span class="sr-only">Previous</span>
+	      </a>
+	      <a class="carousel-control-next" href="#itemImageCarousel" role="button" data-slide="next">
+	        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+	        <span class="sr-only">Next</span>
+	      </a>
+	   </div>
+	</div>
+	_END;
+}

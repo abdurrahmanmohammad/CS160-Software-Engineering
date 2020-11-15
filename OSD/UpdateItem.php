@@ -4,7 +4,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load item database methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory database methods
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/CategoryMethods.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php';
 
@@ -35,10 +35,10 @@ echo <<<_END
       <div class="container">
          <h1>Update Item</h1>
          <hr>
-        <a href="ListItems.php" class="btn">
+        <a href="../../ListItems.php" class="btn">
             <button type="button" class="btn btn-sm btn-outline-secondary">Manage Items</button>
         </a>
-         <a href="AdminPortal.php" class="btn">
+         <a href="../../AdminPortal.php" class="btn">
             <button type="button" class="btn btn-sm btn-outline-secondary">Admin Portal</button>
         </a>
 _END;
@@ -110,7 +110,7 @@ echo <<<_END
                   <label for="price">Product Price</label>
                   <input type="number" class="form-control" aria-describedby="productSizeHelp"
                      id="title" name="title" step="0.01" min="0.01" max="999999.99"
-                     value="{$item['title']}" placeholder="Enter product price" required>
+                     value="{$item['price']}" placeholder="Enter product price" required>
                </div>
                <div class="col">
                   <div class="form-group">

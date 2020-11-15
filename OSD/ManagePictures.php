@@ -1,6 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php';
 

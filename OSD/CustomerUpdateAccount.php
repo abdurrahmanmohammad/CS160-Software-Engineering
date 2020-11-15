@@ -10,15 +10,14 @@ $account = authenticate();
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
 
-$OLD_email = get_post($conn, 'OLD_email');
-$account = AccountSearch($conn, $OLD_email); // Retrieve account
+$OLD_email = $account['email'];
 
 $prevPage = ($account['accountType'] == "admin") ? "AdministratorAccounts.php" : "CustomerAccounts.php";
 
 echo <<<_END
 <html>
 <head>
-    <title>Update User</title>
+    <title>Update Account</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/jquery-3.2.1.slim.min.js"></script>
     <script src="js/popper.min.js"></script>
@@ -28,7 +27,7 @@ echo <<<_END
 <body>
 <div id="nav-placeholder"></div>
 <script>
-    $.get("./nav_admin.html", function(data){
+    $.get("./nav_customer.html", function(data){
         $("#nav-placeholder").replaceWith(data);
     });
 </script>
@@ -51,6 +50,7 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['accountT
     <div class="alert alert-primary" role="alert">Account updated!</div>
     _END;
 	$account = AccountSearch($conn, $OLD_email); // Retrieve updated account
+	$_SESSION['account'] = $account; // Store user's updated account in session
 }
 
 

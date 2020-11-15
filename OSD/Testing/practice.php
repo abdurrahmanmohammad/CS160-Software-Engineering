@@ -3,7 +3,7 @@
 /** Import methods */
 require_once 'Login.php'; // Import database credentials
 require_once 'ItemMethods.php'; // Load item database methods
-require_once 'DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database

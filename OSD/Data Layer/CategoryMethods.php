@@ -1,5 +1,5 @@
 <?php
-require_once 'DatabaseSecurityMethods.php'; // Load methods for error and sanitization
+require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 
 /**
  * #######################################################################
@@ -85,4 +85,38 @@ function CategoryExists($conn, $itemID, $category) {
 		$stmt->close(); // Close statement
 		return $rowcount; // Return rowcount
 	}
+}
+
+function getCategories($conn) {
+	if(!$conn) return null; // DB connection must be passed in
+	$result = $conn->query("SELECT DISTINCT category FROM Category;"); // Execute query statement
+	$output[] = array(); // 2D array to store query output (array of rows)
+	if(!$result) die(mysql_fatal_error($conn->error)); // Error: execute custom error function
+	elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
+		for($i = 0; $i < $rows; $i++) { // Store all entries in table
+			$result->data_seek($i); // Get the i^th row
+			$output[$i] = $result->fetch_array(MYSQLI_BOTH); // Convert it into an associative array
+		}
+	$result->close(); // Close statement for security
+	return $output; // Return the result as a 2D array
+}
+
+function CategoryGetItemsByCategory($conn, $category) {
+	if($stmt = $conn->prepare("SELECT * FROM Item NATURAL JOIN Category WHERE category=?;")) {
+		$stmt->bind_param("s", $category);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$output[] = array(); // 2D array to store query output (array of rows)
+		if(!$result) die(mysql_fatal_error($conn->error)); // Error: execute custom error function
+		elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
+			for($i = 0; $i < $rows; $i++) { // Store all entries in table
+				$result->data_seek($i); // Get the i^th row
+				$output[$i] = $result->fetch_array(MYSQLI_BOTH); // Convert it into an associative array
+			}
+		// If no rows returned, don't store anything
+		$result->close(); // Close statement for security
+		return $output; // Return the result as a 2D array
+	}
+	return null;
+
 }
