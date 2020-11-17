@@ -35,7 +35,7 @@ echo <<<_END
       <div class="container">
          <h1>Update Item</h1>
          <hr>
-        <a href="../../ListItems.php" class="btn">
+        <a href="./ListItems.php" class="btn">
             <button type="button" class="btn btn-sm btn-outline-secondary">Manage Items</button>
         </a>
          <a href="../../AdminPortal.php" class="btn">
@@ -48,7 +48,7 @@ $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
 
 /** @var $itemID */
-$itemID = sanitizeMySQL($conn, get_post($conn, 'itemID')); // Extract item ID from previous page
+$itemID = sanitizeMySQL($conn, get_post($conn, 'OLD_itemID')); // Extract item ID from previous page
 //PrintInventories($item); // Print inventory information
 
 
@@ -109,7 +109,7 @@ echo <<<_END
                <div class="col">
                   <label for="price">Product Price</label>
                   <input type="number" class="form-control" aria-describedby="productSizeHelp"
-                     id="title" name="title" step="0.01" min="0.01" max="999999.99"
+                     id="price" name="price" step="0.01" min="0.01" max="999999.99"
                      value="{$item['price']}" placeholder="Enter product price" required>
                </div>
                <div class="col">

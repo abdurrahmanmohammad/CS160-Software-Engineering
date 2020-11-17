@@ -5,6 +5,37 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import databa
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Directory of file
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
 
+
+/** Print login page */
+echo <<< _END
+<html>
+<head>
+<title>Sign In</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/main.css">
+<script src="js/jquery-3.2.1.slim.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-1.10.2.js"></script>
+</head>
+<body class="text-center">
+	<div id="nav-placeholder"></div>
+	<script>
+    	$.get("./nav.html", function (data) {
+        	$("#nav-placeholder").replaceWith(data);
+    	});
+	</script>
+_END;
+
+/** If logout */
+if($_GET['logout']) {
+	destroy_session_and_data(); // Destroy session and go to sign in page
+	echo <<<_END
+		<div class="alert alert-primary" role="alert">You have been successfully logged out!</div>
+	_END; // Print error message
+}
+
+
 /** Set up connection to DB */
 $conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
 if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
@@ -27,25 +58,9 @@ if(isset($_POST['email']) && isset($_POST['password'])) {
 	}
 }
 
-/** Print login page */
+
+
 echo <<< _END
-<html>
-<head>
-<title>Sign In</title>
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/main.css">
-<script src="js/jquery-3.2.1.slim.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery-1.10.2.js"></script>
-</head>
-<body class="text-center">
-	<div id="nav-placeholder"></div>
-	<script>
-    	$.get("./nav.html", function (data) {
-        	$("#nav-placeholder").replaceWith(data);
-    	});
-	</script>
 	<form class="form-signin" action="Signin.php" method="post">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputEmail" class="sr-only">Email address</label>

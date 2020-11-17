@@ -68,7 +68,7 @@ if(isset($_POST['remove']) && isset($account['email']) && isset($_POST['itemID']
 }
 
 $cart = CartSearch($conn, $account['email']);
-PrintCart($conn, $cart);
+$total = PrintCart($conn, $cart);
 
 function PrintCart($conn, $cart) {
 	echo <<<_END
@@ -93,10 +93,7 @@ function PrintCart($conn, $cart) {
 	/* Print items in cart */
 	$total = 0.0;
 	foreach($cart as $cartItem) {
-		if(is_null($cartItem[0])) {
-
-			break;
-		}
+		if(is_null($cartItem[0])) break;
 		$itemID = $cartItem['itemID']; // Get itemID of item in cart
 		$item = ItemSearchByItemID($conn, $itemID); // Get item info
 		$picture = PictureSearch($conn, $itemID)[0]['directory']; // Get item picture
@@ -107,7 +104,7 @@ function PrintCart($conn, $cart) {
 		$inventoryB = InventorySearchByItemID($conn, $itemID, 'B')['quantity'];
 		$inStock = $inventoryA + $inventoryB;
 		/* Update cart total */
-		$total += $item['price'];
+		$total += $totalPrice;
 		echo <<<_END
 		   <tr>
 		      <td><img src="$picture" class="rounded" width="200"/></td>
@@ -133,17 +130,24 @@ function PrintCart($conn, $cart) {
 		   </tr>
 		_END;
 	}
+	$total = number_format($total, 2);
 	echo <<<_END
+	<tr>
+		<td>Total</td>
+		<td>$total</td>
+	</tr>
+
    </tbody>
 </table>
 </div>
 _END;
-
+	return $total;
 }
 
 if(isset($cart[0][0]))
 	echo <<<_END
 	<form action="Checkout.php" method="post" enctype='multipart/form-data'>
+		<input type="hidden" id="total" name="total" value="$total"/>
 		<button type="submit" class="btn btn-primary" id="checkout" name="checkout">Checkout</button>
 	</form>
 _END;
