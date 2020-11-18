@@ -1,14 +1,16 @@
 <?php
-require_once './Data Layer/Login.php'; // Import database credentials
 require_once './Data Layer/AccountMethods.php'; // Load methods for error and sanitization
 require_once './Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
 
 /** Set up connection to DB */
-$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
-if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+$conn = getConnection();
+
+
 echo <<<_END
 <html>
 <head>
@@ -63,6 +65,7 @@ function PrintAccounts($conn) {
 	      <th>Last name</th>
 	      <th>Phone</th>
 	      <th>Address</th>
+	      <th>Orders</th>
 	      <th>Update</th>
 	      <th>Delete</th>
 	   </tr>
@@ -79,6 +82,12 @@ function PrintAccounts($conn) {
 				<td>{$account['lastname']}</td>
 				<td>{$account['phone']}</td>
 				<td>{$account['address']}</td>
+				<td>
+					<a href="AdminCustomerOrders.php?email={$account['email']}">
+						<button type="submit" class="btn btn-primary">View</button>
+					</a>
+				
+				</td>
 				<td>
 					<form action="UpdateAccount.php" method="post" enctype='multipart/form-data'>
 						<input type="hidden" name="OLD_email" value="{$account['email']}">

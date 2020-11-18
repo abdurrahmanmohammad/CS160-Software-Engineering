@@ -1,14 +1,15 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
 
 /** Set up connection to DB */
-$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
-if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
+$conn = getConnection();
+
 
 $OLD_email = get_post($conn, 'OLD_email');
 $account = AccountSearch($conn, $OLD_email); // Retrieve account

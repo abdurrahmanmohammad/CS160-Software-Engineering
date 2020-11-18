@@ -10,6 +10,13 @@
   <component name="ComposerSettings">
     <execution />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="php_installation_7.4.9" />
   <component name="ProjectId" id="1j44tG3dvdzrU5NmaPdk9I9oUKZ" />
   <component name="ProjectViewState">
@@ -86,7 +93,8 @@
       <workItem from="1605234200551" duration="496000" />
       <workItem from="1605386439463" duration="24156000" />
       <workItem from="1605553865309" duration="1412000" />
-      <workItem from="1605570148129" duration="6148000" />
+      <workItem from="1605570148129" duration="32959000" />
+      <workItem from="1605672563569" duration="14388000" />
     </task>
     <servers />
   </component>
@@ -117,35 +125,51 @@
     </state>
     <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1604723154488" />
     <state x="458" y="222" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.877@0.23.1440.877" timestamp="1605155155113" />
-    <state width="1398" height="230" key="GridCell.Tab.0.bottom" timestamp="1603773990283">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1398" height="86" key="GridCell.Tab.0.bottom" timestamp="1605690359617">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1603428939117" />
+    <state width="1398" height="86" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1605690359617" />
     <state width="1398" height="230" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1603773990283" />
-    <state width="1398" height="230" key="GridCell.Tab.0.center" timestamp="1603773990282">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1398" height="86" key="GridCell.Tab.0.center" timestamp="1605690359616">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1603428939116" />
+    <state width="1398" height="86" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1605690359616" />
     <state width="1398" height="230" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1603773990282" />
-    <state width="1398" height="230" key="GridCell.Tab.0.left" timestamp="1603773990282">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1398" height="86" key="GridCell.Tab.0.left" timestamp="1605690359615">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1603428939115" />
+    <state width="1398" height="86" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1605690359615" />
     <state width="1398" height="230" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1603773990282" />
-    <state width="1398" height="230" key="GridCell.Tab.0.right" timestamp="1603773990282">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1398" height="86" key="GridCell.Tab.0.right" timestamp="1605690359616">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1603428939117" />
+    <state width="1398" height="86" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1605690359616" />
     <state width="1398" height="230" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1603773990282" />
+    <state width="1398" height="86" key="GridCell.Tab.1.bottom" timestamp="1605690359620">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="86" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1605690359620" />
+    <state width="1398" height="86" key="GridCell.Tab.1.center" timestamp="1605690359619">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="86" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1605690359619" />
+    <state width="1398" height="86" key="GridCell.Tab.1.left" timestamp="1605690359618">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="86" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1605690359618" />
+    <state width="1398" height="86" key="GridCell.Tab.1.right" timestamp="1605690359620">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="86" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1605690359620" />
     <state x="471" y="183" key="NewPhpClassDialog" timestamp="1604554901305">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="471" y="183" key="NewPhpClassDialog/0.0.1440.900@0.0.1440.900" timestamp="1604554901305" />
-    <state x="543" y="393" key="NewPhpFileDialog" timestamp="1605574058810">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="543" y="380" key="NewPhpFileDialog" timestamp="1605684977856">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="543" y="380" key="NewPhpFileDialog/0.0.1440.900@0.0.1440.900" timestamp="1605405887572" />
-    <state x="543" y="393" key="NewPhpFileDialog/0.23.1440.877@0.23.1440.877" timestamp="1605574058810" />
+    <state x="543" y="380" key="NewPhpFileDialog/0.0.1440.900@0.0.1440.900" timestamp="1605684977856" />
+    <state x="543" y="393" key="NewPhpFileDialog/0.23.1440.877@0.23.1440.877" timestamp="1605672008744" />
     <state x="324" y="78" width="1440" height="877" key="SettingsEditor" timestamp="1603333078804">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -167,10 +191,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="504" y="248" key="refactoring.ChangeSignatureDialog/0.0.1440.900@0.0.1440.900" timestamp="1603145109786" />
-    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup" timestamp="1605570206732">
+    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup" timestamp="1605660230964">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1605410334707" />
-    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1605570206732" />
+    <state x="385" y="214" width="670" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1605660230964" />
   </component>
 </project>

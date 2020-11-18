@@ -10,7 +10,9 @@ require_once './Data Layer/PictureMethods.php';
 require_once './Data Layer/ItemMethods.php';
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "admin") === 0) header("Location: AdminPortal.php"); // Admin cannot use customer portal
+else if(strcmp($account['accountType'], "customer") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
 
 /** Set up connection to DB */
 $conn = getConnection();
@@ -49,6 +51,11 @@ echo <<<_END
         <h1>Shopping Cart</h1>
         <hr>
 _END;
+
+if(isset($_GET['checkout']) && $_GET['checkout'] == "true")
+	echo <<<_END
+	<div class="alert alert-primary" role="alert">Order placed!</div>
+	_END;
 
 
 if(isset($_POST['update']) && isset($account['email']) && isset($_POST['itemID'])) {
@@ -112,7 +119,7 @@ function PrintCart($conn, $cart) {
 		      <td>{$item['title']}</td>
 		      <td>
 		        <form action="CartView.php" method="post" enctype='multipart/form-data'>
-		            <input type="number" value="$quantity" min="0" max="$inStock" step="1" id="quantity" name="quantity" required>
+		            <input type="number" value="$quantity" min="1" max="$inStock" step="1" id="quantity" name="quantity" required>
 		            <input type="hidden" id="itemID" name="itemID" value="$itemID">
 		            <button type="submit" class="btn btn-primary" id="update" name="update">Update</button>
 		        </form>
@@ -155,7 +162,7 @@ _END;
 echo <<<_END
 	<br>
 	<form action="CustomerPortal.php" method="post" enctype='multipart/form-data'>
-		<button type="submit" class="btn btn-primary" name="update">Back</button>
+		<button type="submit" class="btn btn-primary">Back</button>
 	</form>
     </div>
 </body>

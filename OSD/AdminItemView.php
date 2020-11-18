@@ -9,14 +9,14 @@ require_once './Data Layer/CartMethods.php';
 
 /** Authenticate user on page */
 $account = authenticate(); // Retrieve user account from session
-if(strcmp($account['accountType'], "admin") === 0) header("Location: AdminPortal.php"); // Admin cannot use customer portal
-else if(strcmp($account['accountType'], "customer") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
 
 /** Set up connection to DB */
 $conn = getConnection();
 
 /* Get item to view */
-$itemID = sanitizeMySQL($conn, get_post($conn, 'itemID')); // Extract item ID from previous page
+$itemID = $_GET['itemID'];
 $item = ItemSearchByItemID($conn, $itemID); // Get item from DB
 $pictures = PictureSearch($conn, $itemID); // Get item pictures
 $inventoryA = InventorySearchByItemID($conn, $itemID, 'A');
@@ -45,7 +45,7 @@ echo <<<_END
 <body>
     <div id="nav-placeholder"></div>
     <script>
-    $.get("./nav_customer.html", function(data) {
+    $.get("./nav_admin.html", function(data) {
         $("#nav-placeholder").replaceWith(data);
     });
     </script>
@@ -59,22 +59,6 @@ echo <<<_END
             </ol>
         </nav>
 _END;
-
-/* Add item to cart */
-if(isset($_POST['AddToCart']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
-	$inventoryA = InventorySearchByItemID($conn, $itemID, 'A')['quantity'];
-	$inventoryB = InventorySearchByItemID($conn, $itemID, 'B')['quantity'];
-	if($inventoryA + $inventoryB != 0) { // If there is stock
-		CartInsert($conn, $account['email'], $itemID); // Add item to cart
-		echo <<<_END
-    <div class="alert alert-primary" role="alert">Item {$item['title']} added to cart!</div>
-    _END;
-	} else
-		echo <<<_END
-    <div class="alert alert-primary" role="alert">Out of stock!</div>
-    _END;
-
-}
 
 PrintImageCarousel($pictures);
 
@@ -100,10 +84,6 @@ echo <<<_END
                         </tr>
                     </tbody>
                 </table>
-                <form action="ItemView.php" method="post">
-                	<input type="hidden" id="itemID" name="itemID" value="$itemID">
-                	<button type="submit" class="btn btn-primary" id="AddToCart" name="AddToCart">Add to cart</button>
-                </form>
             </div>
         </div>
         <hr>

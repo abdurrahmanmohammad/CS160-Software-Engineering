@@ -4,8 +4,14 @@ require_once './Data Layer/ItemMethods.php';
 require_once './Data Layer/PictureMethods.php';
 require_once './Data Layer/CategoryMethods.php';
 
-$account = authenticate();
+/** Authenticate user on page */
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "admin") === 0) header("Location: AdminPortal.php"); // Admin cannot use customer portal
+else if(strcmp($account['accountType'], "customer") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
+
+/** Set up connection to DB */
 $conn = getConnection();
+
 
 echo <<<_END
 <html>
@@ -82,16 +88,18 @@ $items = ItemSearch($conn, null, null, null, null, null); // Get all items
 foreach($items as $item) {
 	$picture = PictureSearch($conn, $item['itemID'])[0]['directory']; // Get first picture of item
 	echo <<<_END
-						<form action="ItemView.php" method="post" enctype='multipart/form-data'>
+                        <form action="ItemView.php" method="post" enctype='multipart/form-data'>
+                        <a href="javascript:;" onclick="document.getElementById('form1').submit();">
 						   <input type="hidden" id="itemID" name="itemID" value="{$item['itemID']}">
 						   <div class="col mb-4">
-						      <div class="card h-100">
+						      <div class="card h-100" style="width: 15rem;">
 						            <img src="$picture" class="card-img-top" alt="Picture Unavailable" height="100">
-						            <div class="card-body">
-						               <button type="submit" class="btn btn-primary">{$item['title']} \n\${$item['price']}</button>
+                                    <div class="card-body">
+						               <button type="submit" class="btn btn-primary">{$item['title']}<br>{$item['price']}</button>
 						            </div>
 						      </div>
-						   </div>
+                           </div>
+                        </a>
 						</form>
 _END;
 }
@@ -146,3 +154,4 @@ function PrintCard($conn, $category) {
 	</div>
 	_END;
 }
+

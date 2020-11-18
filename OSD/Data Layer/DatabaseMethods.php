@@ -57,8 +57,6 @@ function getConnection() {
 }
 
 
-
-
 /**
  * A handy function to destroy a session and its data
  */
@@ -76,7 +74,6 @@ function different_user() {
 	destroy_session_and_data(); // Destroy session
 	header("Location: SignIn.php"); // Go to sign in page
 }
-
 
 
 // ********** Fix **********

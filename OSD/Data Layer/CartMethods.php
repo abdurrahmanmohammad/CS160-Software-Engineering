@@ -75,6 +75,17 @@ function CartDelete($conn, $email, $itemID) {
 	return false; // If prepared statement failed, return false
 }
 
+function CartDeleteAll($conn, $email) {
+	if(is_null($conn)) return null; // DB connection must be passed in
+	if($stmt = $conn->prepare("DELETE FROM Cart WHERE email=?;")) { // Sanitize vars with prepared statement
+		$stmt->bind_param("s", $email);
+		$output = $stmt->execute(); // Execute statement: Success = TRUE, Failure = FALSE
+		$stmt->close(); // Close statement
+		return $output; // Return if successful delete
+	}
+	return false; // If prepared statement failed, return false
+}
+
 function CartUpdate($conn, $email, $itemID, $multiplicity) {
 	if(is_null($conn) || is_null($email) || is_null($itemID) || is_null($multiplicity)) return null; // DB connection must be passed in
 	if($stmt = $conn->prepare("Update Cart SET multiplicity=? WHERE email=? AND itemID=?;")) { // Placeholders for further sanitization

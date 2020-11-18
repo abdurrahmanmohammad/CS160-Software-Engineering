@@ -1,7 +1,6 @@
 <?php
 
 /** Import methods */
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import database credentials
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load item database methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory database methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
@@ -9,7 +8,12 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/CategoryMethods.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php';
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
+
+/** Set up connection to DB */
+$conn = getConnection();
 
 echo <<<_END
 <html>
@@ -42,10 +46,6 @@ echo <<<_END
             <button type="button" class="btn btn-sm btn-outline-secondary">Admin Portal</button>
         </a>
 _END;
-
-/** Set up connection to DB */
-$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
-if($conn->connect_error) die(mysql_fatal_error($conn->connect_error)); // Test connection
 
 /** @var $itemID */
 $itemID = sanitizeMySQL($conn, get_post($conn, 'OLD_itemID')); // Extract item ID from previous page

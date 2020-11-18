@@ -6,19 +6,18 @@
  */
 
 /** Import methods */
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/Login.php'; // Import DB credentials
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Load item DB methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/InventoryMethods.php'; // Load inventory DB methods
 require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/PictureMethods.php'; // Load picture DB methods
+require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Load picture DB methods
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
 
 /** Set up connection to DB */
-$conn = new mysqli($hn, $un, $pw, $db); // Create a connection to the database
-// Test connection: $conn->connect_error will not be printed (for debugging purposes only)
-if($conn->connect_error) die(mysql_fatal_error($conn->connect_error));
-
+$conn = getConnection();
 
 /** Prints webpage to create user */
 echo <<<_END

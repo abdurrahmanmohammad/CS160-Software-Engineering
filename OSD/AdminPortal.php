@@ -1,8 +1,13 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Directory of file
+require_once './Data Layer/DatabaseMethods.php'; // Directory of file
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
+
+/** Set up connection to DB */
+$conn = getConnection();
 
 echo <<<_END
 <html>

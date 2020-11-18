@@ -1,21 +1,21 @@
 <?php
-/** Import methods */
-require_once 'Login.php'; // Import DB credentials
-require_once 'ItemMethods.php';
-require_once 'InventoryMethods.php';
-require_once 'PictureMethods.php';
-require_once 'CategoryMethods.php';
-require_once 'CartMethods.php';
-// require_once 'DatabaseMethods.php'; // Can access from same package
-// require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/DatabaseMethods.php'; // Directory of file
-// require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/ItemMethods.php'; // Directory of file
-require_once $_SERVER['DOCUMENT_ROOT'].'/Data Layer/AccountMethods.php'; // Load methods for error and sanitization
-
-
 /** ####################################################### */
 /** ############ Creates database and tables ############## */
 /** ############ Caution: Run this file only once ######### */
 /** ####################################################### */
+
+/** Import methods */
+require_once 'Login.php'; // Import DB credentials
+require_once 'AccountMethods.php';
+require_once 'CartMethods.php';
+require_once 'CategoryMethods.php';
+//require_once 'DatabaseMethods.php';
+require_once 'InventoryMethods.php';
+require_once 'ItemMethods.php';
+require_once 'OrderMethods.php';
+require_once 'PictureMethods.php';
+require_once 'PurchasesMethods.php';
+require_once 'TransactionsMethods.php';
 
 /** Build database: OSD_Database (name included in Login.php) */
 echo "#################### Building database #################### <br>";
@@ -79,4 +79,16 @@ function buildTables($conn) {
 	/** Account(email, itemID, multiplicity) */
 	CartInitialize($conn);
 	echo "--> Table 'Cart' built successfully!<br>";
+
+	/** Orders(orderID, email, order_total, order_weight, shipping_option, address, date_placed) */
+	OrdersInitialize($conn);
+	echo "--> Table 'Orders' built successfully!<br>";
+
+	/** Orders(orderID, email, order_total, order_weight, shipping_option, address, date_placed) */
+	PurchasesInitialize($conn);
+	echo "--> Table 'Purchases' built successfully!<br>";
+
+	/** Transactions(orderID, order_total, card_holder, credit_card, card_month, card_year, cvc) */
+	TransactionsInitialize($conn);
+	echo "--> Table 'Transactions' built successfully!<br>";
 }

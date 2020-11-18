@@ -3,7 +3,9 @@ require_once './Data Layer/AccountMethods.php'; // Load methods for error and sa
 require_once './Data Layer/DatabaseMethods.php'; // Load methods for error and sanitization
 
 /** Authenticate user on page */
-$account = authenticate();
+$account = authenticate(); // Retrieve user account from session
+if(strcmp($account['accountType'], "customer") === 0) header("Location: CustomerPortal.php"); // Customer cannot use admin portal
+else if(strcmp($account['accountType'], "admin") !== 0) header("Location: Signin.php?logout=true"); // Logout if account is not a customer
 
 /** Set up connection to DB */
 $conn = getConnection();
