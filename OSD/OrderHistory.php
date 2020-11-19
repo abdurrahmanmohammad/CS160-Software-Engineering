@@ -58,6 +58,7 @@ function PrintOrders($conn, $order) {
 	$purchases = PurchasesSearch($conn, $orderID);
 	$transaction = TransactionsSearch($conn, $orderID);
 	$credit_card = "xxxxxxxxxxxx".substr($transaction['credit_card'], -4); // Show only last 4 digits
+	$delivered = ($order['delivered'] == 1)? "True" : "False";
 	echo <<<_END
 	<div class="container">
 	<table class="table table-bordered">
@@ -68,6 +69,7 @@ function PrintOrders($conn, $order) {
 	      <th>Shipping Option</th>
 	      <th>Address</th>
 	      <th>Date Placed</th>
+	      <th>Delivered</th>
 	   </tr>
 	</thead>
 	<tbody>
@@ -76,6 +78,7 @@ function PrintOrders($conn, $order) {
 		<td>{$order['shipping_option']}</td>
 		<td>{$order['address']}</td>
 		<td>{$order['date_placed']}</td>
+		<td>$delivered</td>
 	</tr>
 	</tbody>
 	</table>

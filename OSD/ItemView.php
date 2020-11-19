@@ -16,8 +16,16 @@ else if(strcmp($account['accountType'], "customer") !== 0) header("Location: Sig
 $conn = getConnection();
 
 /* Get item to view */
-$itemID = sanitizeMySQL($conn, get_post($conn, 'itemID')); // Extract item ID from previous page
+//$itemID = sanitizeMySQL($conn, get_post($conn, 'itemID')); // Extract item ID from previous page
+$itemID = $_GET['itemID'];
+
+
+// ######### Demo this: security feature
 $item = ItemSearchByItemID($conn, $itemID); // Get item from DB
+if(is_null($item['itemID'])) header("Location: CustomerPortal.php");
+// ######### Demo this: security feature
+
+
 $pictures = PictureSearch($conn, $itemID); // Get item pictures
 $inventoryA = InventorySearchByItemID($conn, $itemID, 'A');
 $inventoryB = InventorySearchByItemID($conn, $itemID, 'B');
@@ -100,7 +108,7 @@ echo <<<_END
                         </tr>
                     </tbody>
                 </table>
-                <form action="ItemView.php" method="post">
+                <form action="ItemView.php?itemID=$itemID" method="post">
                 	<input type="hidden" id="itemID" name="itemID" value="$itemID">
                 	<button type="submit" class="btn btn-primary" id="AddToCart" name="AddToCart">Add to cart</button>
                 </form>

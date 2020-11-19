@@ -320,7 +320,7 @@ function PrintDeliveryOptions($orderTotal, $orderWeight) {
 
 	/** For orders greater than $100 */
 	if($orderTotal > 100.0) {
-		/** Option 1: Free delivery services for any orders over $100.00 (2 day shipping) */
+		/** Option 1: Free (truck) delivery services for any orders over $100.00 (2 day shipping) */
 		echo <<<_END
 		<div class="form-check">
 			<input class="form-check-input" type="radio" id="shipping" name="shipping" value="Option1">
@@ -621,6 +621,6 @@ function ExecuteOrder($conn, $cart, $email) {
 
 	/** Empty cart */
 	CartDeleteAll($conn, $email); // Empty cart after checkout
-	//header("Location: CartView.php?checkout=true"); // Return to cart
+	header("Location: CartView.php?checkout=true"); // Return to cart
 }
 

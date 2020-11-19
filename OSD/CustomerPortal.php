@@ -15,7 +15,6 @@ $conn = getConnection();
 
 echo <<<_END
 <html>
-
 <head>
     <title>Item view</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -88,19 +87,20 @@ $items = ItemSearch($conn, null, null, null, null, null); // Get all items
 foreach($items as $item) {
 	$picture = PictureSearch($conn, $item['itemID'])[0]['directory']; // Get first picture of item
 	echo <<<_END
-                        <form action="ItemView.php" method="post" enctype='multipart/form-data'>
-                        <a href="javascript:;" onclick="document.getElementById('form1').submit();">
-						   <input type="hidden" id="itemID" name="itemID" value="{$item['itemID']}">
-						   <div class="col mb-4">
-						      <div class="card h-100" style="width: 15rem;">
-						            <img src="$picture" class="card-img-top" alt="Picture Unavailable" height="100">
-                                    <div class="card-body">
-						               <button type="submit" class="btn btn-primary">{$item['title']}<br>{$item['price']}</button>
-						            </div>
-						      </div>
-                           </div>
-                        </a>
-						</form>
+	<form action="ItemView.php" method="post" enctype='multipart/form-data'>
+		<a href="ItemView.php?itemID={$item['itemID']}" onclick="document.getElementById('form1').submit();">
+			<input type="hidden" id="itemID" name="itemID" value="{$item['itemID']}">
+				<div class="col mb-4">
+					<div class="card" style="width: 15rem;">
+						<img src="$picture" class="card-img-top" alt="Picture Unavailable" style="height: 12rem;">
+                  			<div class="card-body">
+	                       		<h5 class="card-title">{$item['title']}</h5>
+                            	<h5 class="card-title">\${$item['price']}</h5>
+						    </div>
+					</div>
+                </div>
+        </a>
+	</form>
 _END;
 }
 
@@ -136,18 +136,22 @@ function PrintCard($conn, $category) {
 		$picture = PictureSearch($conn, $item['itemID'])[0]['directory']; // Get first picture of item
 		echo <<<_END
 		<form action="ItemView.php" method="post" enctype='multipart/form-data'>
-		<input type="hidden" id="itemID" name="itemID" value="{$item['itemID']}">
-			<div class="col mb-4">
-				<div class="card h-100">
-					<img src="$picture" class="card-img-top" alt="Picture Unavailable" height="100">
-					<div class="card-body">
-						<button type="submit" class="btn btn-primary">{$item['title']} \n\${$item['price']}</button>
-					</div>
-				</div>
-			</div>
+		   <a href="ItemView.php?itemID={$item['itemID']}" onclick="document.getElementById('form1').submit();">
+		      <input type="hidden" id="itemID" name="itemID" value="{$item['itemID']}">
+		      <div class="col mb-4">
+		         <div class="card" style="width: 15rem;">
+		            <img src="$picture" class="card-img-top" alt="Picture Unavailable" style="height: 12rem;">
+		            <div class="card-body">
+		               <h5 class="card-title">{$item['title']}</h5>
+		               <h5 class="card-title">\${$item['price']}</h5>
+		            </div>
+		         </div>
+		      </div>
+		   </a>
 		</form>
 		_END;
 	}
+
 
 	echo <<<_END
 	   </div>

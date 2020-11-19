@@ -9,6 +9,7 @@ require_once 'DatabaseMethods.php';
  * ########## shipping_option: VARCHAR(8) # Store a 8 char order option                                 ##########
  * ########## address: VARCHAR(100) # Store a max 100 char address                                      ##########
  * ########## date_placed: TIMESTAMP # Timestamp of order placement                                     ##########
+ * ########## delivered: BOOLEAN # Stores if order was delivered                                        ##########
  * ###############################################################################################################
  */
 
@@ -24,6 +25,7 @@ function OrdersInitialize($conn) {
 		shipping_option VARCHAR(8) NOT NULL,
 		address VARCHAR(100) NOT NULL,
 		date_placed TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		delivered BOOLEAN NOT NULL,
 		PRIMARY KEY (orderID)
 	);";
 	/* Check if statement was executed. If cannot build table, terminate program. */
@@ -32,10 +34,10 @@ function OrdersInitialize($conn) {
 
 function OrdersInsert($conn, $orderID, $email, $order_weight, $shipping_option, $address) {
 	/* Params cannot be null */
-	if(is_null($conn) || is_null($orderID) || is_null($email)|| is_null($order_weight)
+	if(is_null($conn) || is_null($orderID) || is_null($email) || is_null($order_weight)
 		|| is_null($shipping_option) || is_null($address)) return false; // Insert failed
 	/* Use prepared statement to insert for further sanitization */
-	if($stmt = $conn->prepare("INSERT INTO Orders VALUES (?, ?, ?, ?, ?, NULL);")) { // Sanitize vars with prepared statement
+	if($stmt = $conn->prepare("INSERT INTO Orders VALUES (?, ?, ?, ?, ?, NULL, 0);")) { // Sanitize vars with prepared statement
 		$stmt->bind_param('ssdss', $orderID, $email, $order_weight, $shipping_option, $address); // Bind params for sanitization
 		/* Execute statement: Success = TRUE, Failure = FALSE */
 		if(!$stmt->execute()) die(mysql_fatal_error("Could not insert: ".$conn->error)); // Error with prepare statement
@@ -71,9 +73,52 @@ function OrdersSearchByOrdersID($conn, $orderID) {
 }
 
 function OrdersSearchByEmail($conn, $email) {
-	if(is_null($conn)) return null; // DB connection must be passed in
+	if(is_null($conn) || is_null($email)) return null; // DB connection must be passed in
 	if($stmt = $conn->prepare("SELECT * FROM Orders WHERE email=? ORDER BY date_placed DESC;")) { // Placeholders for further sanitization
 		$stmt->bind_param("s", $email); // bind parameters for markers
+		$stmt->execute(); // execute query
+		$result = $stmt->get_result();
+		/* Store result of rows in a 2D array and return */
+		$output[] = array(); // 2D array to store query output (array of rows)
+		if(is_null($result)) die(mysql_fatal_error($conn->error)); // Error with query
+		elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
+			for($i = 0; $i < $rows; $i++) { // Store all entries in table
+				$result->data_seek($i); // Get the i^th row
+				$output[$i] = $result->fetch_array(MYSQLI_BOTH); // Convert it into an associative array
+			}
+		// If no rows returned, don't store anything
+		$result->close(); // Close statement for security
+		$stmt->close(); // Close statement for security
+		return $output; // Return the result as a 2D array
+	}
+	return null;
+}
+
+function OrdersGetUndelivered($conn, $shipping) {
+	if(is_null($conn)) return null; // DB connection must be passed in
+	if($stmt = $conn->prepare("SELECT * FROM Orders WHERE shipping_option=? AND delivered=0 ORDER BY date_placed DESC;")) { // Placeholders for further sanitization
+		$stmt->bind_param("s", $shipping); // bind parameters for markers
+		$stmt->execute(); // execute query
+		$result = $stmt->get_result();
+		/* Store result of rows in a 2D array and return */
+		$output[] = array(); // 2D array to store query output (array of rows)
+		if(is_null($result)) die(mysql_fatal_error($conn->error)); // Error with query
+		elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
+			for($i = 0; $i < $rows; $i++) { // Store all entries in table
+				$result->data_seek($i); // Get the i^th row
+				$output[$i] = $result->fetch_array(MYSQLI_BOTH); // Convert it into an associative array
+			}
+		// If no rows returned, don't store anything
+		$result->close(); // Close statement for security
+		$stmt->close(); // Close statement for security
+		return $output; // Return the result as a 2D array
+	}
+	return null;
+}
+
+function OrdersGetDelivered($conn) {
+	if(is_null($conn)) return null; // DB connection must be passed in
+	if($stmt = $conn->prepare("SELECT * FROM Orders WHERE delivered=1 ORDER BY date_placed DESC;")) { // Placeholders for further sanitization
 		$stmt->execute(); // execute query
 		$result = $stmt->get_result();
 		/* Store result of rows in a 2D array and return */
@@ -103,6 +148,20 @@ function OrderExists($conn, $orderID) {
 		return $rowcount; // Return rowcount
 	}
 	return -1; // Error with prepared statement
+}
+
+function OrderDeliver($conn, $orderID, $delivered) {
+	if(is_null($conn) || is_null($orderID) || is_null($delivered)) return -1;
+	if(OrderExists($conn, $orderID) == 0) return -1;
+	if($stmt = $conn->prepare("Update Orders SET delivered=? WHERE orderID=?;")) {
+		$stmt->bind_param("ss", $delivered, $orderID); // bind parameters for markers
+		$stmt->execute(); // Execute query
+		$affected_rows = $stmt->affected_rows; // Store number of rows affected
+		$stmt->close();
+		return $affected_rows;
+	}
+	return -1; // Error with prepared statement
+
 }
 
 function GenerateOrderID($conn) {
