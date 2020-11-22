@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="AdminPortal.php">OSD Product Management System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Item Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="CreateItem.php">Create Item</a>
+                    <a class="dropdown-item" href="ManageItems.php">Manage Item</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Account Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="ManageAdmins.php">Administrator accounts</a>
+                    <a class="dropdown-item" href="ManageCustomers.php">Customer accounts</a>
+                    <a class="dropdown-item" href="CreateAccount.php">Create account</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Order Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="DeliveryDrone.php">Drone Route</a>
+                    <a class="dropdown-item" href="DeliveryTruck.php">Truck Route</a>
+                    <a class="dropdown-item" href="DeliveryOrders.php">Update Order Delivery</a>
+                </div>
+            </li>
+        </ul>
+        <a class="nav-link" href="AdminPortal.php">Admin Home<span class="sr-only"></span></a>
+        <a class="nav-link" href="../Signin.php?logout=true">Logout<span class="sr-only"></span></a>
+    </div>
+</nav>
