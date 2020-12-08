@@ -145,7 +145,12 @@ echo <<<_END
         <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br />
         <select multiple id="waypoints">
 _END;
-PrintOrderChoices($conn);
+
+// Priority: start with same-day shipping, then regular shipping, then free shipping
+PrintOrderChoices($conn, 'Option6'); // Option6: Truck Orders >= $100 (same day) - $25
+PrintOrderChoices($conn, 'Option7'); // Option7: Truck orders < $100 (2-day) - $20
+PrintOrderChoices($conn, 'Option5'); // Option5: Truck Orders >= $100 (2-day) - free
+
 echo <<<_END
         </select>
         <br><br>
@@ -157,55 +162,15 @@ echo <<<_END
 </html>
 _END;
 
-/** Close DB connection before exiting */
-$conn->close(); // Close the connection before exiting
-
-function PrintOrderChoices($conn) {
-	// Shipping options order (based on priority): 2, 4, 1
-	// Option 2: Expedited same day truck shipping
-	$orders = SearchOrdersByShippingAndDelivered($conn, 'Option2', 0); // Get undelivered
-	echo $orders[0][0];
-	foreach($orders as $order) {
-		if(is_null($order['orderID'])) break;
+function PrintOrderChoices($conn, $option) {
+	$orders = SearchOrdersByShippingAndDelivered($conn, $option, 0);
+	foreach($orders as $order)
 		echo <<<_END
 		<option value="{$order['address']}">
-		{$order['address']}
+		[{$order['orderID']}] {$order['address']}
 		</option>
-		_END;
-	}
-
-	// Option 4: Paid truck shipping 2-day
-	$orders = SearchOrdersByShippingAndDelivered($conn, 'Option4', 0); // Get undelivered
-	foreach($orders as $order) {
-		if(is_null($order['orderID'])) break;
-		echo <<<_END
-		<option value="{$order['address']}">
-		{$order['address']}
-		</option>
-		_END;
-	}
-
-	// Option 1: Free truck shipping 2-day
-	$orders = SearchOrdersByShippingAndDelivered($conn, 'Option1', 0); // Get undelivered orders
-	echo $orders[0][0];
-	foreach($orders as $order) {
-		if(is_null($order['orderID'])) break;
-		echo <<<_END
-		<option value="{$order['address']}">
-		{$order['address']}
-		</option>
-		_END;
-	}
+_END;
 }
 
-// Have separate page for drone
-// Print same day shipping first
-// Have field in orders "delivered" - make undelivered at beg in checkout, print on order history pages
-// Have separate page which modifies isDelivered field 0 or 1 in orders table
-// Have 2 select boxes: priority first then 2 day
-
-// Delivery options 1,2,4 are done by truck
-
-// Optional
-// Save waypoints
-// Update them in DB
+/** Close DB connection before exiting */
+$conn->close(); // Close the connection before exiting

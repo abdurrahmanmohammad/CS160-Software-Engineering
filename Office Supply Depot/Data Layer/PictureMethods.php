@@ -3,7 +3,7 @@ require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 
 /**
  * ###################################################################################
- * ########## Pictures: Pictures(itemID, directory)                          ##########
+ * ########## Pictures(itemID, directory)                                   ##########
  * ########## itemID: CHAR(4)           # Store a 4 digit ID                ##########
  * ########## directory: VARCHAR(200)   # Store a directory (max 200 chars) ##########
  * ###################################################################################

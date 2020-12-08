@@ -3,7 +3,7 @@ require_once 'DatabaseMethods.php'; // Load methods for error and sanitization
 require_once 'ItemMethods.php'; // Load methods Item table
 /**
  * ###########################################################################################
- * ########## Table: Inventory(itemID, warehouse, quantity, update)                 ##########
+ * ########## Table: Inventory(itemID, warehouse, quantity, last_update)            ##########
  * ########## itemID: CHAR(4)       # Store a 4 digit itemID                        ##########
  * ########## warehouse: CHAR(1)    # Store letter of warehouse                     ##########
  * ########## quantity: SMALLINT    # Max: unsigned 32767, signed 65535             ##########

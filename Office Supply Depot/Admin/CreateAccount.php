@@ -8,25 +8,6 @@ $account = authenticate('admin'); // Retrieve user account from session
 /** Set up connection to DB */
 $conn = getConnection();
 
-$accountExists = false;
-$accountCreated = false;
-
-/* If all inputs are set */
-if(isset($_POST['email'], $_POST['password'], $_POST['firstname'], $_POST['lastname'], $_POST['phone'],
-	$_POST['street_number'], $_POST['route'], $_POST['locality'], $_POST['administrative_area_level_1'],
-	$_POST['postal_code'], $_POST['country'], $_POST['account_type'])) {
-	$email = get_post($conn, 'email');
-	if(!AccountExists($conn, $email)) {
-		$password = password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
-		$address = $_POST['street_number']." ".$_POST['route']." ".$_POST['locality']." ".$_POST['administrative_area_level_1']." ".
-			$_POST['postal_code']." ".$_POST['country'];
-		InsertAccount($conn, $email, $password, get_post($conn, 'account_type'),
-			get_post($conn, 'firstname'), get_post($conn, 'lastname'),
-			get_post($conn, 'phone'), $address);
-		$accountCreated = true;
-	} else $accountExists = true;
-}
-
 
 /** Prints webpage to create user */
 echo <<<_END
@@ -194,6 +175,30 @@ echo <<<_END
       <h1>Create User</h1>
       <hr>
 _END;
+$accountExists = false;
+$accountCreated = false;
+
+/* If all inputs are set */
+if(isset($_POST['email'], $_POST['password'], $_POST['firstname'], $_POST['lastname'], $_POST['phone']
+	, $_POST['street_number'], $_POST['route'], $_POST['locality'], $_POST['administrative_area_level_1'],
+	$_POST['postal_code'], $_POST['country'])) {
+	$email = get_post($conn, 'email');
+	if($_POST['street_number'] != '' && $_POST['route'] != '' && $_POST['locality'] != '' &&
+		$_POST['administrative_area_level_1'] != '' && $_POST['postal_code'] != '' && $_POST['country'] != '') {
+		if(!AccountExists($conn, $email)) {
+			$password = password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
+			$address = $_POST['street_number']." ".$_POST['route']." ".$_POST['locality']." ".$_POST['administrative_area_level_1']." ".
+				$_POST['postal_code']." ".$_POST['country'];
+			InsertAccount($conn, $email, $password, get_post($conn, 'account_type'),
+				get_post($conn, 'firstname'), get_post($conn, 'lastname'),
+				get_post($conn, 'phone'), $address);
+			$accountCreated = true;
+		} else $accountExists = true;
+
+	} else echo '<div class="alert alert-primary" role="alert">Address must be valid!</div>';
+}
+
+
 // Print messages
 if($accountExists) echo <<<_END
 <div class="alert alert-primary" role="alert">Username has been taken, please enter another email!</div>
@@ -205,7 +210,7 @@ echo <<<_END
 <form method="POST">
    <div class="form-group">
       <label for="email">Email</label>
-      <input type="email" class="form-control" name="email" id="email" placeholder="Enter user name" required>
+      <input type="text" pattern="[A-Za-z]+@[A-Za-z]+\.[A-Za-z]+" class="form-control" name="email" id="email" placeholder="Enter user name" required>
    </div>
    <div class="form-group">
       <label for="password">Password</label>
@@ -221,7 +226,8 @@ echo <<<_END
    </div>
    <div class="form-group">
       <label for="phone">Phone</label>
-      <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" placeholder="Enter 10 digit phone number: 0123456789" required>
+      <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter 10 digit phone number: 0123456789" 
+        pattern="\d*" minlength="10" maxlength="10" required>
    </div>
    
    

@@ -73,7 +73,7 @@ echo <<<_END
                   </div>
                   <div class="card-body">
                      <p class="card-title"> You can update the delivery status of an order.</p>
-                     <a href="DeliveryOrders.php" class="btn">
+                     <a href="OrdersUndelivered.php" class="btn">
                      <button type="button" class="btn btn-lg btn-block btn-primary">View</button>
                      </a>
                   </div>

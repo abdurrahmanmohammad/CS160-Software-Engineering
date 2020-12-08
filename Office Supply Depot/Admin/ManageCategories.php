@@ -54,10 +54,17 @@ if(isset($_POST['DeleteCategory']) && isset($itemID) && isset($_POST['category']
 
 /** Add category */
 if(isset($_POST['AddCategory']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
-	InsertCategory($conn, $itemID, get_post($conn, 'category'));
-	echo <<<_END
-    <div class="alert alert-primary" role="alert">Category inserted!</div>
-    _END;
+	if(!CategoryExists($conn, $itemID, get_post($conn, 'category'))) {
+		InsertCategory($conn, $itemID, get_post($conn, 'category'));
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Category inserted!</div>
+		_END;
+	} else {
+		echo <<<_END
+		<div class="alert alert-primary" role="alert">Category exists!</div>
+		_END;
+	}
+
 }
 
 

@@ -82,6 +82,7 @@ function SearchCategories($conn, $itemID) {
 	/** Store each row of result in output */
 	$output[] = array(); // 2D array to store query output (array of rows)
 	if(!$result) mysql_fatal_error($conn->error); // Error: execute custom error function
+	if($result->num_rows == 0) return null; // If result is empty, return null
 	elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
 		for($i = 0; $i < $rows; $i++) { // Store all entries in table
 			$result->data_seek($i); // Get the i^th row
@@ -99,6 +100,7 @@ function GetAllCategories($conn) {
 	$result = $conn->query("SELECT DISTINCT category FROM Categories;"); // Execute query statement
 	$output[] = array(); // 2D array to store query output (array of rows)
 	if(!$result) mysql_fatal_error($conn->error); // Error: execute custom error function
+	if($result->num_rows == 0) return null; // If result is empty, return null
 	elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
 		for($i = 0; $i < $rows; $i++) { // Store all entries in table
 			$result->data_seek($i); // Get the i^th row

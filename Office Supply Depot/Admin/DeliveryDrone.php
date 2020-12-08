@@ -145,7 +145,12 @@ echo <<<_END
         <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br />
         <select multiple id="waypoints">
 _END;
-PrintOrderChoices($conn);
+
+// Priority: start with same-day shipping, then regular shipping, then free shipping
+PrintOrderChoices($conn, 'Option3'); // Option3: Drone Orders >= $100 (same day) - $25
+PrintOrderChoices($conn, 'Option4'); // Option4: Drone Orders < $100 (2-day) - $20
+PrintOrderChoices($conn, 'Option2'); // Option2: Drone Orders >= $100 (2-day) - free
+
 echo <<<_END
         </select>
         <br><br>
@@ -157,16 +162,15 @@ echo <<<_END
 </html>
 _END;
 
-/** Close DB connection before exiting */
-$conn->close(); // Close the connection before exiting
-
-function PrintOrderChoices($conn) {
-
-	$orders = SearchOrdersByShippingAndDelivered($conn, 'Option3', 0);
+function PrintOrderChoices($conn, $option) {
+	$orders = SearchOrdersByShippingAndDelivered($conn, $option, 0);
 	foreach($orders as $order)
 		echo <<<_END
 		<option value="{$order['address']}">
-		{$order['address']}
+		[{$order['orderID']}] {$order['address']}
 		</option>
-		_END;
+_END;
 }
+
+/** Close DB connection before exiting */
+$conn->close(); // Close the connection before exiting

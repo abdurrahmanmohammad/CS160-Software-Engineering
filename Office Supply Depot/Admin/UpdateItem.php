@@ -49,9 +49,25 @@ echo <<<_END
 _END;
 
 /** Update item */
-if(isset($_POST['UpdateItem']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
-	UpdateItem($conn, $itemID, get_post($conn, 'title'), get_post($conn, 'price'), get_post($conn, 'weight'), get_post($conn, 'description'));
-	echo '<div class="alert alert-primary" role="alert">Item '.$itemID.' updated!</div>';
+if(isset($_POST['UpdateItem'])) {
+	if(isset($_POST['itemID'], $_POST['title'], $_POST['price'], $_POST['weight'],
+			$_POST['description'], $_POST['quantityA'], $_POST['quantityB']) && $_POST['description'] != "") { // Check if submit button clicked and if itemID is not null
+		UpdateItem($conn, $itemID, get_post($conn, 'title'), get_post($conn, 'price'), get_post($conn, 'weight'), get_post($conn, 'description'));
+		echo '<div class="alert alert-primary" role="alert">Item '.$itemID.' updated!</div>';
+
+		/** Update inventory A */
+		if(isset($_POST['quantityA']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+			UpdateInventoryQuantity($conn, $itemID, 'A', get_post($conn, 'quantityA'));
+			echo '<div class="alert alert-primary" role="alert">Inventory B updated!</div>';
+		}
+
+		/** Update inventory B */
+		if(isset($_POST['quantityB']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
+			UpdateInventoryQuantity($conn, $itemID, 'B', get_post($conn, 'quantityB'));
+			echo '<div class="alert alert-primary" role="alert">Inventory A updated!</div>';
+		}
+
+	} else echo '<div class="alert alert-primary" role="alert">Fields cannot be null!</div>';
 }
 
 /** Delete item */
@@ -59,18 +75,6 @@ if(isset($_POST['DeleteItem']) && isset($itemID)) { // Check if submit button cl
 	DeleteItem($conn, $itemID);
 	echo '<div class="alert alert-primary" role="alert">Item '.$itemID.' deleted!</div>';
 	header("Location: ManageItems.php");
-}
-
-/** Update inventory A */
-if(isset($_POST['quantityA']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
-	UpdateInventoryQuantity($conn, $itemID, 'A', get_post($conn, 'quantityA'));
-	echo '<div class="alert alert-primary" role="alert">Inventory B updated!</div>';
-}
-
-/** Update inventory B */
-if(isset($_POST['quantityB']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
-	UpdateInventoryQuantity($conn, $itemID, 'B', get_post($conn, 'quantityB'));
-	echo '<div class="alert alert-primary" role="alert">Inventory A updated!</div>';
 }
 
 
@@ -92,17 +96,17 @@ echo <<<_END
             </div>
             <div class="form-row">
                <div class="col">
-                  <label for="price">Product Price</label>
-                  <input type="number" class="form-control" aria-describedby="productSizeHelp"
-                     id="price" name="price" step="0.01" min="0.01" max="999999.99"
-                     value="{$item['price']}" placeholder="Enter product price" required>
+                    <label for="price">Price (\$)</label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01"
+                           max="999999.99" aria-describedby="productWeightHelp" 
+                           placeholder="Enter product price" value="{$item['price']}" required>
                </div>
                <div class="col">
                   <div class="form-group">
-                     <label for="weight">Product Weight</label>
-                     <input type="text" class="form-control" aria-describedby="productWeightHelp" 
-                        id="weight" name="weight" tep="0.01" min="0.01" max="999999.99"
-                        value="{$item['weight']}" placeholder="Enter product Weight" required>
+                    <label for="weight">Weight (lb.)</label>
+                    <input type="number" class="form-control" id="weight" name="weight" step="0.01"
+                           min="0.01" max="999999.99" aria-describedby="productSizeHelp"
+                           placeholder="Enter product Size" value="{$item['weight']}" required>
                   </div>
                </div>
             </div>
@@ -114,17 +118,17 @@ echo <<<_END
          
          
          
-         
          <div class="form-group">
             <label for="quantity">Warehouse A</label>
-            <input type="number" class="form-control" min="0" max="32000"
-                   id="quantityA" name="quantityA" value="{$inventoryA['quantity']}" placeholder="Quantity in stock" required>
+            <input type="number" class="form-control" id="quantityA" name="quantityA" min="0" max="32000"
+                   placeholder="Quantity in stock" value="{$inventoryA['quantity']}" required>
              <a>Last updated: {$inventoryA['last_update']} </a>
         </div>
         <div class="form-group">
             <label for="quantity">Warehouse B</label>
-            <input type="number" class="form-control" min="0" max="32000"
-                   id="quantityB" name="quantityB" value="{$inventoryB['quantity']}" placeholder="Quantity in stock" required>
+            <input type="number" class="form-control" id="quantityB" name="quantityB" min="0" max="32000"
+                   placeholder="Quantity in stock" value="{$inventoryB['quantity']}" required>
+                   
              <a>Last updated: {$inventoryB['last_update']} </a>
         </div>
         

@@ -1,7 +1,7 @@
 <?php
 /**
  * ###################################################################################
- * ########## Carts(userID, itemID, multiplicity)                    ##########
+ * ########## Carts(userID, itemID, multiplicity)                           ##########
  * ########## email: VARCHAR(50) # Store email (mac 50 chars)               ##########
  * ########## itemID: CHAR(4) # Store a 4 digit user ID                     ##########
  * ########## multiplicity: SMALLINT # Store a multiplicity of item in cart ##########
@@ -119,7 +119,7 @@ function UpdateCart($conn, $email, $itemID, $multiplicity) {
  * @param $itemID
  * @return mixed
  */
-function CartExists($conn, $email, $itemID) {
+function CartItemExists($conn, $email, $itemID) {
 	/** Check if parameters are valid/null */
 	if(!$conn) mysql_fatal_error("Connection cannot be null");
 	if($conn->connect_error) mysql_fatal_error($conn->connect_error); // Test connection

@@ -49,11 +49,13 @@ _END;
 
 
 /** If submit button clicked and all the fields are set: Create Item */
-if(isset($_POST['itemID']) && isset($_POST['title']) && isset($_POST['price']) && isset($_POST['weight']) && isset($_POST['description'])
-	&& isset($_FILES['picture']) && isset($_POST['quantityA']) && isset($_POST['quantityB'])) {
-	$itemID = get_post($conn, 'itemID'); // Retrieve itemID
-	// Checks if item exists and inserts if item DNE
-	CreateItem($conn);
+if(isset($_POST['CreateItem'])) {
+	if(isset($_POST['itemID'], $_POST['title'], $_POST['price'], $_POST['weight'], $_POST['description']
+			, $_FILES['picture'], $_POST['quantityA'], $_POST['quantityB']) && $_POST['description'] != "") {
+		$itemID = get_post($conn, 'itemID'); // Retrieve itemID
+		// Checks if item exists and inserts if item DNE
+		CreateItem($conn);
+	} else echo '<div class="alert alert-primary" role="alert">Fields cannot be null!</div>';
 }
 
 /** Close the connection before exiting */
@@ -77,7 +79,7 @@ echo <<<_END
         <div class="form-row">
             <div class="col">
                 <div class="form-group">
-                    <label for="price">Weight</label>
+                    <label for="price">Price (\$)</label>
                     <input type="number" class="form-control" id="price" name="price" step="0.01" min="0.01"
                            max="999999.99"
                            aria-describedby="productWeightHelp" placeholder="Enter product price" required>
@@ -85,7 +87,7 @@ echo <<<_END
             </div>
             <div class="col">
                 <div class="form-group">
-                    <label for="weight">Price</label>
+                    <label for="weight">Weight (lb.)</label>
                     <input type="number" class="form-control" id="weight" name="weight" step="0.01"
                            min="0.01" max="999999.99" aria-describedby="productSizeHelp"
                            placeholder="Enter product Size" required>
@@ -110,7 +112,7 @@ echo <<<_END
             <input type="number" class="form-control" id="quantity" name="quantityB" min="0" max="32000"
                    placeholder="Quantity in stock" required>
         </div>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary" id="CreateItem" name="CreateItem">Create</button>
     </form>
 </div>
 
@@ -118,9 +120,6 @@ echo <<<_END
 
 </html>
 _END;
-
-/** Close DB connection before exiting */
-$conn->close(); // Close the connection before exiting
 
 /**
  * Create item and insert in DB
@@ -143,7 +142,7 @@ function CreateItem($conn) {
 		InsertItem($conn, $itemID, $title, $price, $weight, $description); // Insert item
 		echo '<div class="alert alert-primary" role="alert">Item insert created!</div>';
 	} else {
-		echo '<div class="alert alert-primary" role="alert">Item insert failed!</div>';
+		echo '<div class="alert alert-primary" role="alert">Item already exists!</div>';
 		return false;
 	}
 
@@ -151,13 +150,13 @@ function CreateItem($conn) {
 	if(!InsertInventory($conn, $itemID, 'A', $quantityA, null)) { // Try to item picture in DB
 		echo <<<_END
     <div class="alert alert-primary" role="alert">Inventory A insert failed!</div>
-    _END;
+_END;
 		return false; // Try to item picture in DB
 	}
 	if(!InsertInventory($conn, $itemID, 'B', $quantityB, null)) { // Try to item picture in DB
 		echo <<<_END
     <div class="alert alert-primary" role="alert">Inventory B insert failed!</div>
-    _END;
+_END;
 		return false; // Try to item picture in DB
 	}
 	/* Upload picture and retrieve filename */
@@ -167,12 +166,12 @@ function CreateItem($conn) {
 	if(!InsertPicture($conn, $itemID, $picture)) { // Try to insert picture in DB
 		echo <<<_END
     <div class="alert alert-primary" role="alert">Picture insert failed!</div>
-    _END;
+_END;
 		return false;
 	} else
 		echo <<<_END
 		<div class="alert alert-primary" role="alert">Picture inserted!</div>
-		_END;
+_END;
 	return true; // Successful item creation
 }
 

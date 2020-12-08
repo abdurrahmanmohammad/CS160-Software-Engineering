@@ -60,15 +60,16 @@ $order_weight = $total['order_weight'];
 if($order_total != '0.00' && $order_weight != '0.00') { // Order cannot be empty
 	echo <<<_END
 	<form action="Checkout.php" method="post" enctype='multipart/form-data'>
-	_END;
+_END;
 	PrintShippingOptions($order_total, $order_weight); // Print shipping options
+	// Go to checkout page
 	echo <<<_END
-	<br>
-	<input type="hidden" id="total" name="order_total" value="$order_total">
-	<input type="hidden" id="total" name="order_weight" value="$order_weight">
-	<button type="submit" class="btn btn-primary" id="checkout" name="checkout">Checkout</button>
-	</form>
-	_END; // Go to checkout page
+<br>
+<input type="hidden" id="total" name="order_total" value="$order_total">
+<input type="hidden" id="total" name="order_weight" value="$order_weight">
+<button type="submit" class="btn btn-primary" id="checkout" name="checkout">Checkout</button>
+</form>
+_END;
 }
 
 /** Print back button and end of page */
@@ -95,12 +96,12 @@ function PrintCart($conn, $cart) {
 	         <th>Quantity</th>
 	         <th>Unit Price</th>
 	         <th>Total Price</th>
-	         <th>Weight</th>
+	         <th>Weight (lb.)</th>
 	         <th>Description</th>
 	         <th>Remove</th>
 	      </tr>
 	   </thead>
-	_END;
+_END;
 
 	/** Print items in cart and calculate order info */
 	$order_total = 0.0;
@@ -143,7 +144,7 @@ function PrintCart($conn, $cart) {
 		        </form>
 		      </td>
 		   </tr>
-		_END;
+_END;
 	}
 	/** Print order summary */
 	$order_total = number_format($order_total, 2); // Format as a float
@@ -154,13 +155,13 @@ function PrintCart($conn, $cart) {
 	   <td>\$$order_total</td>
 	</tr>
 	<tr>
-	   <td>Order Weight</td>
+	   <td>Order Weight (lb.)</td>
 	   <td>$order_weight</td>
 	</tr>
 	</tbody>
 	</table>
 	</div>
-	_END;
+_END;
 	/** Return array of order total info */
 	return array('order_total' => $order_total, 'order_weight' => $order_weight);
 }
@@ -175,49 +176,73 @@ function PrintShippingOptions($order_total, $order_weight) {
 	echo <<<_END
 	<div id="shipOptions">
 		<h1>Shipping Options</h1> 
-	_END;
+_END;
 
-	/** For orders greater than $100 */
-	if($order_total > 100.0) {
-		/** Option 1: Free (truck) delivery services for any orders over $100.00 (2 day shipping) */
-		echo <<<_END
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="shipping" value="Option1">
-			<input type="hidden" name="shipping_cost" value="0">
-			<label class="form-check-label" for="shipping">Free 2-day truck shipping</label>
-		</div>
-		_END;
+	// Option1: Pickup: free
+	echo <<<_END
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option1" checked>
+	<label class="form-check-label" for="shipping">Pickup (free)</label>
+</div>
+_END;
 
-		/** Option 2: For same day truck delivery of orders over $100, customer can pay a surcharge of $25 */
-		echo <<<_END
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="shipping" value="Option2">
-			<input type="hidden" name="shipping_cost" value="25">
-			<label class="form-check-label" for="Option2">Same day truck shipping ($25)</label>
-		</div>
-		_END;
+	if($order_weight < 15.0) { // Ship with drones
+		// Option2: Orders >= $100: free (2-day)
+		if($order_total >= 100.0)
+			echo <<<_END
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option2">
+	<label class="form-check-label" for="shipping">Free drone shipping (2-day)</label>
+</div>
+_END;
+
+		// Option3: Orders >= $100 + same day: $25
+		if($order_total >= 100.0)
+			echo <<<_END
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option3">
+	<label class="form-check-label" for="shipping">Expedited drone shipping (same-day) \$25</label>
+</div>
+_END;
+		// Option4: Orders < $100: $20 (2-day)
+		if($order_total < 100.0)
+			echo <<<_END
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option4">
+	<label class="form-check-label" for="shipping">Regular drone shipping (2-day) \$20</label>
+</div>
+_END;
+
 	} else {
-		/** For any order that are under $100, customer can request deliveries (drone or truck) by paying a surcharge of $20 */
-		if($order_weight < 15.0) {
-			/** Option 3: For any orders that are less than 15 lbs, the delivery will be done by a drone on the same day during business hours */
+		// Ship with trucks
+		// Option5: Orders >= $100: free (2-day)
+		if($order_total >= 100.0)
 			echo <<<_END
-		<div class="form-check">
-			<input class="form-check-input" type="radio" name="shipping" value="Option3" checked>
-			<input type="hidden" name="shipping_cost" value="20">
-			<label class="form-check-label" for="Option3">Drone 2-day shipping ($20.00)</label>
-		</div>
-		_END;
-		} else {
-			/** Option 4: Otherwise the orders will be delivered by delivery truck within 2 business days */
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option5">
+	<label class="form-check-label" for="shipping">Free truck shipping (2-day)</label>
+</div>
+_END;
+		// Option6: Orders >= $100 + same day: $25
+		if($order_total >= 100.0)
 			echo <<<_END
-			<div class="form-check">
-				<input class="form-check-input" type="radio" name="shipping" value="Option4" checked>
-				<input type="hidden" name="shipping_cost" value="20">
-				<label class="form-check-label" for="Option4">Truck 2-day shipping ($20.00)</label>
-			</div>
-		_END;
-		}
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option6">
+	<label class="form-check-label" for="shipping">Expedited truck shipping (same-day) \$25</label>
+</div>
+_END;
+
+		// Option7: Orders < $100: $20 (2-day)
+		if($order_total < 100.0)
+			echo <<<_END
+<div class="form-check">
+	<input class="form-check-input" type="radio" name="shipping" value="Option7">
+	<label class="form-check-label" for="shipping">Regular truck shipping (2-day) \$20</label>
+</div>
+_END;
+
 	}
+
 	/** Print end of element */
 	echo '</div>';
 }

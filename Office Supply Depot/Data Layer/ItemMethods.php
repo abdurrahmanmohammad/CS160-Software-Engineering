@@ -60,7 +60,7 @@ function InsertItem($conn, $itemID, $title, $price, $weight, $description) {
 	if(!$title) mysql_fatal_error("Title cannot be null");
 	if(!$price) mysql_fatal_error("Price cannot be null");
 	if(!$weight) mysql_fatal_error("Weight cannot be null");
-	if(!$description) mysql_fatal_error("Description cannot be null");
+	//if(!$description) mysql_fatal_error("Description cannot be null");
 	/** Insert: sanitize variables with prepared statement */
 	if(!$stmt = $conn->prepare("INSERT INTO Items VALUES (?, ?, ?, ?, ?);")) mysql_fatal_error("Prepare statement failed: ".$conn->error);
 	if(!$stmt->bind_param('ssdds', $itemID, $title, $price, $weight, $description)) mysql_fatal_error("Binding parameters failed: ".$conn->error); // Bind parameters for sanitization
@@ -104,7 +104,7 @@ function UpdateItem($conn, $itemID, $title, $price, $weight, $description) {
 	if(!$title) mysql_fatal_error("Title cannot be null");
 	if(!$price) mysql_fatal_error("Price cannot be null");
 	if(!$weight) mysql_fatal_error("Weight cannot be null");
-	if(!$description) mysql_fatal_error("Description cannot be null");
+	//if(!$description) mysql_fatal_error("Description cannot be null");
 	/** Update: sanitize variables with prepared statement */
 	if(!$stmt = $conn->prepare("Update Items SET title=?, price=?, weight=?, description=? WHERE itemID=?;")) mysql_fatal_error("Prepare statement failed: ".$conn->error);
 	if(!$stmt->bind_param('sddss', $title, $price, $weight, $description, $itemID)) mysql_fatal_error("Binding parameters failed: ".$conn->error); // Bind parameters for sanitization
@@ -141,6 +141,7 @@ function GetAllItems($conn) {
 	/** Store each row of result in output */
 	$output[] = array(); // 2D array to store query output (array of rows)
 	if(!$result) mysql_fatal_error($conn->error); // Error: execute custom error function
+	else if($result->num_rows == 0) return null; // If result is empty, return null
 	elseif($rows = $result->num_rows)  // If rows returned: $rows != 0 or $rows != null
 		for($i = 0; $i < $rows; $i++) { // Store all entries in table
 			$result->data_seek($i); // Get the i^th row

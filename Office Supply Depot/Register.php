@@ -6,31 +6,11 @@ require_once './Data Layer/DatabaseMethods.php'; // Load methods for error and s
 /** Set up connection to DB */
 $conn = getConnection();
 
-$accountExists = false;
-$accountCreated = false;
-
-/* If all inputs are set */
-if(isset($_POST['email'], $_POST['password'], $_POST['firstname'], $_POST['lastname'], $_POST['phone']
-	, $_POST['street_number'], $_POST['route'], $_POST['locality'], $_POST['administrative_area_level_1'],
-	$_POST['postal_code'], $_POST['country'])) {
-	$email = get_post($conn, 'email');
-	if(!AccountExists($conn, $email)) {
-		$password = password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
-		$address = $_POST['street_number']." ".$_POST['route']." ".$_POST['locality']." ".$_POST['administrative_area_level_1']." ".
-			$_POST['postal_code']." ".$_POST['country'];
-		InsertAccount($conn, $email, $password, "customer",
-			get_post($conn, 'firstname'), get_post($conn, 'lastname'),
-			get_post($conn, 'phone'), $address);
-		$accountCreated = true;
-	} else $accountExists = true;
-}
-
-
 /** Prints webpage to create user */
 echo <<<_END
 <html>
    <head>
-      <title>Create User</title>
+      <title>Register</title>
       <link rel="stylesheet" href="CSS/bootstrap.min.css">
       <script src="./JS/jquery-3.2.1.slim.min.js"></script>
       <script src="./JS/popper.min.js"></script>
@@ -189,21 +169,34 @@ echo <<<_END
          });
       </script>
       <div class="container">
-      <h1>Create User</h1>
+      <h1>Register</h1>
       <hr>
 _END;
-// Print messages
-if($accountExists) echo <<<_END
-<div class="alert alert-primary" role="alert">Username has been taken, please enter another email!</div>
-_END;
-elseif($accountCreated) echo <<<_END
-<div class="alert alert-primary" role = "alert">Account Created!</div >
-_END;
+
+
+// If the "Create" button was clicked
+if(isset($_POST['create'])) {
+	// If all inputs are set
+	if(isset($_POST['email'], $_POST['password'], $_POST['firstname'], $_POST['lastname'], $_POST['phone'])) {
+		$email = get_post($conn, 'email'); // Get email
+		// If address was submitted incorrectly
+		if($_POST['street_number'] != '' && $_POST['route'] != '' && $_POST['locality'] != '' && $_POST['administrative_area_level_1'] != '' && $_POST['postal_code'] != '' && $_POST['country'] != '') {
+			if(!AccountExists($conn, $email)) {
+				$password = password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
+				$address = $_POST['street_number']." ".$_POST['route']." ".$_POST['locality']." ".$_POST['administrative_area_level_1']." ".$_POST['postal_code']." ".$_POST['country'];
+				InsertAccount($conn, $email, $password, "customer", get_post($conn, 'firstname'), get_post($conn, 'lastname'), get_post($conn, 'phone'), $address);
+				echo '<div class="alert alert-primary" role = "alert">Account Created!</div >';
+			} else echo '<div class="alert alert-primary" role="alert">Username has been taken, please enter another email!</div>';
+		} else echo '<div class="alert alert-primary" role="alert">Address must be valid!</div>';
+	} else '<div class="alert alert-primary" role="alert">Cannot have empty fields!</div>';
+}
+
+
 echo <<<_END
 <form method="POST">
    <div class="form-group">
       <label for="email">Email</label>
-      <input type="email" class="form-control" name="email" id="email" placeholder="Enter user name" required>
+      <input type="text" pattern="[A-Za-z]+@[A-Za-z]+\.[A-Za-z]+" class="form-control" name="email" id="email" placeholder="Enter user name" required>
    </div>
    <div class="form-group">
       <label for="password">Password</label>
@@ -211,15 +204,16 @@ echo <<<_END
    </div>
    <div class="form-group">
       <label for="firstname">First name</label>
-      <input type="text" class="form-control" name="firstname" minlength="1" placeholder="Enter full name" required>
+      <input type="text" pattern="[A-Za-z]+" class="form-control" name="firstname" minlength="1" placeholder="Enter full name" required>
    </div>
    <div class="form-group">
       <label for="lastname">Last name</label>
-      <input type="text" class="form-control" name="lastname" minlength="1" placeholder="Enter full name" required>
+      <input type="text" pattern="[A-Za-z]+" class="form-control" name="lastname" minlength="1" placeholder="Enter full name" required>
    </div>
    <div class="form-group">
       <label for="phone">Phone</label>
-      <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" placeholder="Enter 10 digit phone number: 0123456789" required>
+      <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter 10 digit phone number: 0123456789" 
+        pattern="\d*" minlength="10" maxlength="10" required>
    </div>
    
    
@@ -228,7 +222,7 @@ echo <<<_END
    <p>Address</p>
    <div class="shippingAddr" id="locationField">
       <div class="form-row">
-         <input class="form-control" id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text">
+         <input class="form-control" id="autocomplete" name="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text">
          <br><br>
       </div>
       <div class="form-row">

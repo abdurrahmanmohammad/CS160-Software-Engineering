@@ -46,22 +46,53 @@ _END;
 /** Get variables from cart page */
 $order_total = floatval(get_post($conn, 'order_total')); // Get order total
 $order_weight = floatval(get_post($conn, 'order_weight')); // Get order weight
-$shipping_cost = floatval(get_post($conn, 'shipping_cost')); // Get shipping cost
+//$shipping_cost = floatval(get_post($conn, 'shipping_cost')); // Get shipping cost
 $shipping = get_post($conn, 'shipping'); // Get shipping option
+/** Get shipping cost */
+$shipping_cost = 0.0;
+switch($shipping) {
+	case "Option1":
+		$shipping_cost = 0.0; // Option1: Pickup (free)
+		echo '<div class="alert alert-primary" role="alert">Please pickup orders at: 1 Washington Sq, San Jose, CA 95192</div>';
+		break;
+	case "Option2":
+		$shipping_cost = 0.0; // Option2: Orders >= $100: free (2-day)
+		break;
+	case "Option3":
+		$shipping_cost = 25.0; // Option3: Orders >= $100 + same day: $25
+		break;
+	case "Option4":
+		$shipping_cost = 20.0; // Option4: Orders < $100: $20 (2-day)
+		break;
+	case "Option5":
+		$shipping_cost = 0.0; // Option5: Orders >= $100: free (2-day)
+		break;
+	case "Option6":
+		$shipping_cost = 25.0; // Option6: Orders >= $100 + same day: $25
+		break;
+	case "Option7":
+		$shipping_cost = 20.0; // Option7: Orders < $100: $20 (2-day)
+		break;
+	default:
+		$shipping_cost = 0.0;
+}
 $grand_total = $order_total + $shipping_cost; // Calculate grand total
 
 /** If any variables are null or 0 */
-if($order_total <= 0 || $order_weight <= 0 || $shipping_cost <= 0)
+if($order_total <= 0 || $order_weight <= 0)
 	header("Location: CartView.php"); // Return to cart
 
 /** Retrieve cart */
 $cart = SearchCart($conn, $account['email']);
 
 /** If order was placed (button was clicked) */
-if(isset($_POST['street_number'], $_POST['route'], $_POST['locality'], $_POST['administrative_area_level_1'],
-	$_POST['postal_code'], $_POST['country'], $_POST['OrderTotal'], $_POST['CardHolderName'], $_POST['CardNumber'],
-	$_POST['Month'], $_POST['Year'], $_POST['CVC'], $_POST['shipping'], $_POST['order_weight'])) {
-	ExecuteOrder($conn, $cart, $account['email'], $grand_total, $order_total, $shipping_cost, $order_weight, $shipping);
+if(isset($_POST['OrderTotal'], $_POST['CardHolderName'], $_POST['CardNumber'],
+	$_POST['Month'], $_POST['Year'], $_POST['CVC'], $_POST['shipping'], $_POST['order_weight'])
+) {
+	if($_POST['street_number'] != '' && $_POST['route'] != '' && $_POST['locality'] != '' &&
+		$_POST['administrative_area_level_1'] != '' && $_POST['postal_code'] != '' && $_POST['country'] != '') {
+		ExecuteOrder($conn, $cart, $account['email'], $grand_total, $order_total, $shipping_cost, $order_weight, $shipping);
+	} else echo '<div class="alert alert-primary" role="alert">Address must be valid!</div>';
 }
 
 /** Print order summary: print items in cart and cart total */
@@ -76,6 +107,10 @@ echo <<<_END
    		<input type="hidden" name="shipping_cost" value="$shipping_cost">
    		<input type="hidden" name="shipping" value="$shipping">
       <!-- Start: Google Maps API -->
+_END;
+
+if($shipping != "Option1")
+	echo <<<_END
       <h1>Shipping Address</h1>
       <div class="shippingAddr" id="locationField">
          <div class="form-row">
@@ -111,15 +146,25 @@ echo <<<_END
             </div>
          </div>
          <br>
+_END;
+echo <<<_END
+         <h1>Billing Address</h1>
+         <div>
+            <div class="form-group">
+            	<label for="BillingAddress">Update billing address via Account page or <a href="CustomerUpdateAccount.php">click here</a></label>
+               <input type="text" class="form-control" id="BillingAddress" name="BillingAddress" value="{$account['address']}" readonly>
+            </div>
+         </div>
+         
          <div id="paymentInfo">
             <h1>Payment information</h1>
             <div class="form-group">
                <label for="total">Order Total (\$)</label>
-               <input type="text" class="form-control" id="OrderTotal" name="OrderTotal" value="$order_total" readonly>
+               <input type="text" class="form-control" id="OrderTotal" name="OrderTotal" value="$grand_total" readonly>
             </div>
             <div class="form-group">
                <label for="CardHolderName">Card Holder Name</label>
-               <input type="text" class="form-control" id="CardHolderName" name="CardHolderName" placeholder="Enter name" required>
+               <input type="text" pattern="[A-Za-z]+" class="form-control" id="CardHolderName" name="CardHolderName" placeholder="Enter name" required>
             </div>
             <div class="form-group">
             </div>
@@ -132,11 +177,14 @@ echo <<<_END
             <div class="form-row">
                <div class="form-group col-md-3">
                   <label for="inputCardNumber">Expires Month</label>
-                  <input type="tel" class="form-control" id="Month" name="Month" pattern="[0-9]{2}" placeholder="MM" required>
+                  <input type="text" class="form-control" id="Month" name="Month" placeholder="MM" 
+        			pattern="\d*" minlength="2" maxlength="2" required>
                </div>
                <div class="form-group col-md-3">
                   <label for="inputCardNumber">Expires Year</label>
-                  <input type="tel" class="form-control" id="Year" name="Year" pattern="[0-9]{2}" placeholder="MM" required>
+                  <input type="text" class="form-control" id="Year" name="Year" placeholder="YYYY" 
+        			pattern="\d*" minlength="4" maxlength="4" required>
+        
                </div>
                <div class="form-group col-md-3">
                   <label for="inputCVS">CVC</label>
@@ -176,10 +224,10 @@ function PrintOrderSummary($conn, $cart, $order_total, $order_weight, $shipping_
 	         <th>Quantity</th>
 	         <th>Unit Price</th>
 	         <th>Total Price</th>
-	         <th>Weight</th>
+	         <th>Weight (lb.)</th>
 	      </tr>
 	   </thead>
-	_END;
+_END;
 
 	/** Print each item in cart */
 	foreach($cart as $cartItem) {
@@ -203,7 +251,7 @@ function PrintOrderSummary($conn, $cart, $order_total, $order_weight, $shipping_
 		      <td>$item_total</td>
 		      <td>{$item['weight']}</td>
 		   </tr>
-		_END;
+_END;
 	}
 
 	/** Print order summary */
@@ -217,7 +265,7 @@ function PrintOrderSummary($conn, $cart, $order_total, $order_weight, $shipping_
 			<td></td>
 		</tr>
 		<tr>
-			<td><h5>Weight</h5></td>
+			<td><h5>Weight (lb.)</h5></td>
 			<td><h6>$order_weight</h6></td>
 			<td></td>
 			<td></td>
@@ -251,7 +299,7 @@ function PrintOrderSummary($conn, $cart, $order_total, $order_weight, $shipping_
 	   </tbody>
 	</table>
 	</div>
-	_END;
+_END;
 }
 
 
@@ -282,35 +330,46 @@ function ExecuteOrder($conn, $cart, $email, $grand_total, $order_total, $shippin
 	/** ########## Step 2: Validate inputs ########## */
 	/** Validate credit card */
 	/* If same year: check if months is valid */
-	if(intval(date("Y")) === intval("20".$card_year) && intval($card_month) <= date("m")) {
+	if(intval($card_month) <= 0 || 12 < intval($card_month)) {
+		echo '<div class="alert alert-primary" role="alert">Invalid month!</div>';
+		return false;
+	} elseif(intval($card_year) > 2050) {
+		echo '<div class="alert alert-primary" role="alert">Expiry year is too large!</div>';
+		return false;
+	} else if(intval(date("Y")) === intval($card_year) && intval($card_month) <= date("m")) {
 		// If same year but credit card's month is less than or equal to current month
+		// Card month must be greater than current month
 		echo <<<_END
 		<div class="alert alert-primary" role="alert">Expired card! Month out of range!</div>
-		_END; // Card month must be greater than current month
+_END;
 		return false;
-	} else if(intval("20".$card_year) < intval(date("Y"))) { // If different years
+	} else if(intval($card_year) < intval(date("Y"))) { // If different years
 		// If different years but credit card's year is before current year
+		// Card month must be greater than current month
 		echo <<<_END
 		<div class="alert alert-primary" role="alert">Expired card! Year out of range! </div>
-		_END; // Card month must be greater than current month
+_END;
 		return false;
 	}
 
 	/** Validate address: Must be located in San Jose, CA, USA */
 	if(strcmp($country, 'United States') !== 0) { // Must be in the US
+		// Card month must be greater than current month
 		echo <<<_END
 		<div class="alert alert-primary" role="alert">Must be in the United States!</div>
-		_END; // Card month must be greater than current month
+_END;
 		return false;
 	} else if(strcmp($state, 'CA') !== 0) { // Must be in the CA
+		// Card month must be greater than current month
 		echo <<<_END
 		<div class="alert alert-primary" role="alert">Must be in the California!</div>
-		_END; // Card month must be greater than current month
+_END;
 		return false;
 	} else if(strcmp($city, 'San Jose') !== 0) { // // Must be in the SJ
+		// Card month must be greater than current month
 		echo <<<_END
 		<div class="alert alert-primary" role="alert">Must be in San Jose!</div>
-		_END; // Card month must be greater than current month
+_END;
 		return false;
 	}
 
@@ -331,12 +390,12 @@ function ExecuteOrder($conn, $cart, $email, $grand_total, $order_total, $shippin
 		if($totalInventory === 0) { // If inventory for an item is out of stock
 			echo <<<_END
 			<div class="alert alert-primary" role="alert">Out of stock!</div>
-			_END;
+_END;
 			return false;
 		} else if($totalInventory < $quantity) { // If quantity exceeds stock
 			echo <<<_END
 			<div class="alert alert-primary" role="alert">Quantity of {$item['title']} exceeds stock!</div>
-			_END;
+_END;
 			return false;
 		}
 	}
@@ -347,6 +406,7 @@ function ExecuteOrder($conn, $cart, $email, $grand_total, $order_total, $shippin
 	InsertOrder($conn, $orderID, $email, $grand_total, $order_total, $shipping_cost, $order_weight, $shipping, $address);
 
 	/** Create a new payment transaction */
+	$card_year = substr($card_year, 2);
 	InsertTransaction($conn, $orderID, $OrderTotal, $card_holder, $credit_card, $card_month, $card_year, $cvc);
 
 	foreach($cart as $cartItem) {

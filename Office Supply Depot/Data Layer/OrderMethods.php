@@ -47,7 +47,7 @@ function InsertOrder($conn, $orderID, $email, $grand_total, $order_total, $shipp
 	if(!$email) mysql_fatal_error("Email cannot be null");
 	if(!$grand_total) mysql_fatal_error("Grand total cannot be null");
 	if(!$order_total) mysql_fatal_error("Order total cannot be null");
-	if(!$shipping_cost) mysql_fatal_error("Shipping cost cannot be null");
+	//if(!$shipping_cost) mysql_fatal_error("Shipping cost cannot be null");
 	if(!$order_weight) mysql_fatal_error("Order weight cannot be null");
 	if(!$shipping_option) mysql_fatal_error("Shipping option cannot be null");
 	if(!$address) mysql_fatal_error("Address cannot be null");

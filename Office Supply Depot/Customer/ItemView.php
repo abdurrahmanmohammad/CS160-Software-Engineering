@@ -61,7 +61,9 @@ _END;
 if(isset($_POST['AddToCart']) && isset($itemID)) { // Check if submit button clicked and if itemID is not null
 	$inventoryA = SearchInventory($conn, $itemID, 'A')['quantity'];
 	$inventoryB = SearchInventory($conn, $itemID, 'B')['quantity'];
-	if($inventoryA + $inventoryB != 0) { // If there is stock
+	if(CartItemExists($conn, $account['email'], $itemID))
+		echo '<div class="alert alert-primary" role="alert">Item already in cart!</div>';
+	else if($inventoryA + $inventoryB != 0) { // If there is stock
 		InsertCart($conn, $account['email'], $itemID, 1); // Add item to cart
 		echo <<<_END
     <div class="alert alert-primary" role="alert">Item {$item['title']} added to cart!</div>
@@ -84,7 +86,7 @@ echo <<<_END
                         <tr>
                             <th scope="col">Price</th>
                             <th scope="col">Item ID</th>
-                            <th scope="col">Weight</th>
+                            <th scope="col">Weight (lb.)</th>
                             <th scope="col">In stock</th>
                         </tr>
                     </thead>

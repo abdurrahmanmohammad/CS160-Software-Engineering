@@ -42,19 +42,36 @@ echo <<<_END
     <hr>
 _END;
 
+// Check if the fields are set
+if(isset($_POST['update'])) {
+	// Check if all the necessary fields are set
+	if(isset($_POST['email'], $_POST['password'], $_POST['account_type'], $_POST['firstname'], $_POST['lastname'], $_POST['phone'])) {
+		// Check if we need to update address: If address is same as old address, keep it. If not, validate address and update
+		$address = null;
+		if(get_post($conn, 'address') == $account['address']) {
+			// If address was not updated: keep it
+			$address = get_post($conn, 'address');
 
-if(isset($_POST['email'], $_POST['password'], $_POST['account_type'], $_POST['firstname'], $_POST['lastname'], $_POST['phone'],
-	$_POST['street_number'], $_POST['route'], $_POST['locality'], $_POST['administrative_area_level_1'],
-	$_POST['postal_code'], $_POST['country'])) {
-	// Check if password was updated. If so, salt and hash the new password before storing.
-	$password = $account['password'] == get_post($conn, 'password') ?
-		$account['password'] : password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
-	$address = $_POST['street_number']." ".$_POST['route']." ".$_POST['locality']." ".$_POST['administrative_area_level_1']." ".$_POST['postal_code']." ".$_POST['country'];
-	UpdateAccount($conn, get_post($conn, 'email'), $password,
-		get_post($conn, 'account_type'), get_post($conn, 'firstname'), get_post($conn, 'lastname'),
-		get_post($conn, 'phone'), $address);
-	echo '<div class="alert alert-primary" role="alert">Account updated!</div>';
-	$account = SearchAccountByEmail($conn, $email); // Retrieve updated account
+			// ########## Start: Update account ##########
+			// Check if password was updated. If so, salt and hash the new password before storing.
+			$password = $account['password'] == get_post($conn, 'password') ? $account['password'] : password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
+			UpdateAccount($conn, get_post($conn, 'email'), $password, get_post($conn, 'account_type'), get_post($conn, 'firstname'), get_post($conn, 'lastname'), get_post($conn, 'phone'), $address);
+			echo '<div class="alert alert-primary" role="alert">Account updated!</div>';
+			$account = SearchAccountByEmail($conn, $email); // Retrieve updated account
+			// ########## End: Update account ##########
+		} else if($_POST['street_number'] != '' && $_POST['route'] != '' && $_POST['locality'] != '' && $_POST['administrative_area_level_1'] != '' && $_POST['postal_code'] != '' && $_POST['country'] != '') {
+			// If address was updated: Validate address fields and get new address
+			$address = $_POST['street_number']." ".$_POST['route']." ".$_POST['locality']." ".$_POST['administrative_area_level_1']." ".$_POST['postal_code']." ".$_POST['country'];
+
+			// ########## Start: Update account ##########
+			// Check if password was updated. If so, salt and hash the new password before storing.
+			$password = $account['password'] == get_post($conn, 'password') ? $account['password'] : password_hash(get_post($conn, 'password'), PASSWORD_BCRYPT); // Salt the password with a random salt and hash (60 chars)
+			UpdateAccount($conn, get_post($conn, 'email'), $password, get_post($conn, 'account_type'), get_post($conn, 'firstname'), get_post($conn, 'lastname'), get_post($conn, 'phone'), $address);
+			echo '<div class="alert alert-primary" role="alert">Account updated!</div>';
+			$account = SearchAccountByEmail($conn, $email); // Retrieve updated account
+			// ########## End: Update account ##########
+		} else echo '<div class="alert alert-primary" role="alert">Address must be valid!</div>';
+	} else '<div class="alert alert-primary" role="alert">Cannot have empty fields!</div>';
 }
 
 
@@ -77,24 +94,24 @@ echo <<<_END
     </div>
     <div class="form-group">
         <label for="firstname">First name</label>
-        <input type="text" class="form-control" name="firstname" placeholder="Enter first name"
+        <input type="text" pattern="[A-Za-z]+" class="form-control" name="firstname" placeholder="Enter first name"
                value="{$account['firstname']}" required>
     </div>
     <div class="form-group">
         <label for="lastname">Last name</label>
-        <input type="text" class="form-control" name="lastname" placeholder="Enter last name"
+        <input type="text" pattern="[A-Za-z]+" class="form-control" name="lastname" placeholder="Enter last name"
                value="{$account['lastname']}" required>
     </div>
     <div class="form-group">
         <label for="phone">Phone</label>
-        <input type="tel" class="form-control" name="phone" pattern="[0-9]{10}" value="{$account['phone']}" 
-        placeholder="Enter 10 digit phone number: 0123456789" required>
+        <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter 10 digit phone number: 0123456789" 
+        pattern="\d*" minlength="10" maxlength="10" value="{$account['phone']}" required>
     </div>
 	
-	<p>Address (Make sure fields below are filled out)</p>
+	<p>Address</p>
 	<div class="shippingAddr" id="locationField">
       <div class="form-row">
-         <input class="form-control" id="autocomplete" value="{$account['address']}" onFocus="geolocate()" type="text">
+         <input name="address" class="form-control" id="autocomplete" value="{$account['address']}" onFocus="geolocate()" type="text">
          <br><br>
       </div>
       <div class="form-row">
@@ -127,7 +144,7 @@ echo <<<_END
       </div>
 	
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary" name="update">Update</button>
         <a href="CustomerPortal.php" class="btn">
             <button type="button" class="btn btn-primary">Back</button>
         </a>

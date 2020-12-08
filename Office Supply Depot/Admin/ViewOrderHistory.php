@@ -57,13 +57,14 @@ function PrintOrders($conn, $order) {
 	echo <<<_END
 	<div class="container">
 	<table class="table table-bordered">
-	<h3>Order: $orderID</h3>
+	<h4>Order Summary</h4>
 	<thead>
 	   <tr>
+	   	  <th>Order ID</th>
 	   	  <th>Grand Total</th>
 	   	  <th>Order Total</th>
 	   	  <th>Shipping Cost</th>
-	      <th>Order Weight</th>
+	      <th>Order Weight (lb.)</th>
 	      <th>Shipping Option</th>
 	      <th>Address</th>
 	      <th>Date Placed</th>
@@ -72,6 +73,7 @@ function PrintOrders($conn, $order) {
 	</thead>
 	<tbody>
 	<tr>
+		<td>$orderID</td>
 		<td>\${$order['grand_total']}</td>
 		<td>\${$order['order_total']}</td>
 		<td>\${$order['shipping_cost']}</td>
@@ -83,11 +85,12 @@ function PrintOrders($conn, $order) {
 	</tr>
 	</tbody>
 	</table>
-	_END;
+_END;
 
 
 	echo <<<_END
 	<table class="table table-bordered">
+	<h4>Order Items</h4>
 	<thead>
 	   <tr>
 	      <th>Item ID</th>
@@ -97,7 +100,7 @@ function PrintOrders($conn, $order) {
 	   </tr>
 	</thead>
 	<tbody>
-	_END;
+_END;
 	foreach($purchases as $purchase) {
 		$itemID = $purchase['itemID'];
 		$item = SearchItem($conn, $itemID);
@@ -105,19 +108,20 @@ function PrintOrders($conn, $order) {
 		<tr>
 			<td>$itemID</td>
 			<td>{$item['title']}</td>
-			<td>{$purchase['price']}</td>
+			<td>\${$purchase['price']}</td>
 			<td>{$purchase['multiplicity']}</td>
 		</tr>
-		_END;
+_END;
 	}
 	echo <<<_END
 	</tbody>
 	</table>
-	_END;
+_END;
 
-
+	$order_total = number_format($transaction['order_total'], 2);
 	echo <<<_END
 	<table class="table table-bordered">
+	<h4>Payment Information</h4>
 	<thead>
 	   <tr>
 	      <th>Order Total</th>
@@ -129,7 +133,7 @@ function PrintOrders($conn, $order) {
 	</thead>
 	<tbody>
 	<tr>
-		<td>{$transaction['order_total']}</td>
+		<td>\$$order_total</td>
 		<td>{$transaction['card_holder']}</td>
 		<td>{$credit_card}</td>
 		<td>{$transaction['card_month']}</td>
@@ -140,7 +144,7 @@ function PrintOrders($conn, $order) {
 	</div>
 	<hr>
 	<br><br><br>
-	_END;
+_END;
 }
 
 /** Close DB connection before exiting */
