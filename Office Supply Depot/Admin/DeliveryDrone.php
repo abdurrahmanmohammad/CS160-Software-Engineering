@@ -15,7 +15,7 @@ echo <<<_END
     <title>Drone Delivery</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHBlsmFRD1tJK4kU8qTl9cATAtEyxXF7A&callback=initMap&libraries=&v=weekly"
+            src="https://maps.googleapis.com/maps/api/js?key=?&callback=initMap&libraries=&v=weekly"
             defer
     ></script>
     <style type="text/css">

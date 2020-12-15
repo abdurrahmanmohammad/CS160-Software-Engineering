@@ -19,7 +19,7 @@ echo <<<_END
       <!-- Start: Google Maps API -->
       <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHBlsmFRD1tJK4kU8qTl9cATAtEyxXF7A&callback=initAutocomplete&libraries=places&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=?&callback=initAutocomplete&libraries=places&v=weekly"
       defer
     ></script>
     <style type="text/css">

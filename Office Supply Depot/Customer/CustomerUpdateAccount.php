@@ -26,7 +26,7 @@ echo <<<_END
       <!-- Start: Google Maps API -->
       <link rel="stylesheet" href="../CSS/GoogleMapsAPI.css">
       <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHBlsmFRD1tJK4kU8qTl9cATAtEyxXF7A&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=?&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
       <script src="../JS/GoogleMapsAPI.js"></script>
       <!-- End: Google Maps API -->
 </head>

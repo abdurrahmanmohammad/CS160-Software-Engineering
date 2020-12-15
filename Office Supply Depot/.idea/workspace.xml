@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f4835edc-def6-4d7b-92cc-0f53b8a8c2b8" name="Default Changelist" comment="" />
+    <list default="true" id="f4835edc-def6-4d7b-92cc-0f53b8a8c2b8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Admin/CreateAccount.php" beforeDir="false" afterPath="$PROJECT_DIR$/Admin/CreateAccount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Admin/DeliveryDrone.php" beforeDir="false" afterPath="$PROJECT_DIR$/Admin/DeliveryDrone.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Admin/DeliveryTruck.php" beforeDir="false" afterPath="$PROJECT_DIR$/Admin/DeliveryTruck.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Admin/UpdateAccount.php" beforeDir="false" afterPath="$PROJECT_DIR$/Admin/UpdateAccount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Customer/CustomerUpdateAccount.php" beforeDir="false" afterPath="$PROJECT_DIR$/Customer/CustomerUpdateAccount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Register.php" beforeDir="false" afterPath="$PROJECT_DIR$/Register.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,12 +18,16 @@
   <component name="ComposerSettings">
     <execution />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="php_installation_7.4.9">
     <include_path>
       <path value="/Applications/MAMP/bin/php/php7.4.9/lib/php" />
     </include_path>
   </component>
   <component name="ProjectId" id="1kjCySCjyCauW1rZrUc9AY7uOri" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -49,6 +61,7 @@
       <workItem from="1606637266726" duration="115000" />
       <workItem from="1607311222515" duration="4867000" />
       <workItem from="1607393687140" duration="539000" />
+      <workItem from="1608040627842" duration="186000" />
     </task>
     <servers />
   </component>
